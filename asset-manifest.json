@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/penta-jumble/static/css/main.ae5f44f5.css",
-    "main.js": "/penta-jumble/static/js/main.1e85e9b4.js",
+    "main.js": "/penta-jumble/static/js/main.ae6be058.js",
     "index.html": "/penta-jumble/index.html",
     "main.ae5f44f5.css.map": "/penta-jumble/static/css/main.ae5f44f5.css.map",
-    "main.1e85e9b4.js.map": "/penta-jumble/static/js/main.1e85e9b4.js.map"
+    "main.ae6be058.js.map": "/penta-jumble/static/js/main.ae6be058.js.map"
   },
   "entrypoints": [
     "static/css/main.ae5f44f5.css",
-    "static/js/main.1e85e9b4.js"
+    "static/js/main.ae6be058.js"
   ]
 }
