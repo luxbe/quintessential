@@ -1,14 +1,6 @@
-import { useEffect } from 'react'
 import { WORDS } from './words'
 import shuffle from 'lodash/shuffle'
 import chunk from 'lodash/chunk'
-
-export const useWindowEvent = (event, callback) => {
-  useEffect(() => {
-    window.addEventListener(event, callback)
-    return () => window.removeEventListener(event, callback)
-  }, [event, callback])
-}
 
 const getJumbledWords = (solvedWords) => {
   let jumble, numCorrect
@@ -66,4 +58,10 @@ const getLetterState = ({ jumbledWords, solvedWords, activeIndex }, index) => {
   const almost = !active && !correct && unsolvedLetters.includes(jumbledLetter)
 
   return { index, active, correct, almost }
+}
+
+export const getTranslateXY = (element) => {
+  const style = window.getComputedStyle(element)
+  const matrix = new DOMMatrixReadOnly(style.transform)
+  return { x: matrix.m41, y: matrix.m42 }
 }

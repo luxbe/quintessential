@@ -1,17 +1,25 @@
 import classNames from 'classnames'
+import { animated } from 'react-spring'
 
-export const Word = ({ word, index: wi, wordState }) => (
-  <div className="word">
-    <p style={{ marginRight: 8 }}>word {wi + 1}:</p>
+export const Word = ({ word, index: wi, wordState, bind, springs }) => {
+  return (
+    <div className="word">
+      <p style={{ marginRight: 8 }}>word {wi + 1}:</p>
 
-    {word.split('').map((letter, li) => (
-      <div
-        key={wi * 5 + li}
-        data-index={wi * 5 + li}
-        className={`tile ${classNames(wordState[li])}`}
-      >
-        {letter}
-      </div>
-    ))}
-  </div>
-)
+      {word.split('').map((letter, li) => {
+        const index = wi * 5 + li
+        return (
+          <animated.div
+            {...bind(index)}
+            key={index}
+            data-index={index}
+            className={`tile ${classNames(wordState[li])}`}
+            style={springs[index]}
+          >
+            {letter}
+          </animated.div>
+        )
+      })}
+    </div>
+  )
+}

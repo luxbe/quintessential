@@ -1,6 +1,7 @@
 .word {
   display: flex;
   margin: 20px 0;
+  user-select: none;
 }
 .tile {
   margin: 2px;
@@ -12,6 +13,8 @@
   justify-content: center;
   align-items: center;
   font-size: 24px;
+  touch-action: none;
+  text-decoration: none;
 }
 
 .tile.active {
