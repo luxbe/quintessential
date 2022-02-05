@@ -1,68 +1,51 @@
-import { useEffect, useRef, useState } from 'react'
-import { WORDS } from './words'
-import shuffle from 'lodash/shuffle'
-import { chunk } from 'lodash'
-const shuffled = shuffle([...WORDS])
+import { useState } from 'react'
+import { Word } from './components/Word'
+import {
+  getInitialState,
+  getWordState,
+  performSwap,
+  useWindowEvent,
+} from './utils'
 
-const getRandomWords = (count = 5) => shuffled.slice(0, count)
-const getJumbledWords = (words) =>
-  shuffle([...words].join('')).reduce((arr, char, _i) => {
-    const i = Math.floor(_i / 5)
-    return [...arr.slice(0, i), (arr[i] || '') + char, ...arr.slice(i + 1)]
-  }, [])
+// TODO: share button
+// TODO: one puzzle per day
 
-const useWindowEvent = (event, callback) => {
-  useEffect(() => {
-    window.addEventListener(event, callback)
-    return () => window.removeEventListener(event, callback)
-  }, [event, callback])
-}
-
+const initialState = getInitialState()
 function App() {
-  const [words] = useState(getRandomWords())
-  const [jumbled, setJumbled] = useState(getJumbledWords(words))
-  const startRef = useRef({ x: 0, y: 0 })
-  const deltaRef = useRef({ x: 0, y: 0 })
-  const [activeTile, setActiveTile] = useState(null)
-  const [moveCount, setMoveCount] = useState(0)
-  const [complete, setComplete] = useState(false)
-
-  useEffect(() => {
-    setComplete(
-      jumbled.every((w, wi) =>
-        w.split('').every((c, ci) => c === words[wi][ci]),
-      ),
+  const [state, setState] = useState(initialState)
+  const onSelect = (index) => setState((s) => ({ ...s, activeIndex: index }))
+  const getIsComplete = ({ solvedWords, jumbledWords }) =>
+    jumbledWords.every((w, wi) =>
+      w.split('').every((c, ci) => c === solvedWords[wi][ci]),
     )
-  }, [jumbled, words])
 
-  const onMouseDown = ({ clientX, clientY }) => {
-    if (complete) return
-    let tile = document.elementFromPoint(clientX, clientY)
-    if (!tile.className.includes('tile')) return
-
-    if (typeof activeTile === 'number') {
-      const otherIndex = +tile.dataset.index
-      if (activeTile === otherIndex) {
-        setActiveTile(null)
-      } else {
-        setActiveTile(null)
-        setMoveCount((mc) => mc + 1)
-        setJumbled((jumbled) => {
-          const str = jumbled.join('').split('')
-          const a = str[activeTile]
-          str[activeTile] = str[otherIndex]
-          str[otherIndex] = a
-          return chunk(str.join(''), 5).map((s) => s.join(''))
-        })
+  const onSwap = (index) =>
+    setState(({ jumbledWords, activeIndex, moveCount, ...state }) => {
+      const newJumbledWords = performSwap(jumbledWords, activeIndex, index)
+      return {
+        ...state,
+        activeIndex: null,
+        moveCount: moveCount + 1,
+        jumbledWords: newJumbledWords,
+        isComplete: getIsComplete({ ...state, jumbledWords: newJumbledWords }),
       }
-    } else {
-      setActiveTile(+tile.dataset.index)
-      startRef.current = { x: clientX, y: clientY }
-      deltaRef.current = { x: clientX - tile.x, y: clientY - tile.y }
-    }
-  }
+    })
 
-  useWindowEvent('pointerdown', onMouseDown)
+  useWindowEvent('pointerdown', ({ clientX, clientY }) => {
+    let tile = document.elementFromPoint(clientX, clientY)
+    if (state.isComplete || !tile.className.includes('tile')) return
+
+    const index = +tile.dataset.index
+
+    // if no tile is selected, select the clicked tile
+    if (typeof state.activeIndex !== 'number') return onSelect(index)
+
+    // if we click the selected tile, deselect it
+    if (state.activeIndex === index) return onSelect(null)
+
+    // otherwise, swap the active tile with the one we just clicked
+    onSwap(index)
+  })
 
   return (
     <div>
@@ -72,37 +55,18 @@ function App() {
         White means the letter is not in that word. Click two letters to swap
         their position.
       </p>
-      <p>Moves: {moveCount}</p>
-      {complete && <b>You win!</b>}
-      {jumbled.map((word, wordIndex) => (
-        <div className="word" key={word}>
-          <p style={{ marginRight: 8 }}>word {wordIndex + 1}:</p>
-          {word.split('').map((l, i) => {
-            const index = wordIndex * 5 + i
-            const correct = words[wordIndex][i] === l
-            const remainingLetters = words[wordIndex]
-              .split('')
-              .filter((c, ci) => jumbled[wordIndex][ci] !== c)
-            const wrongSpot = !correct && remainingLetters.includes(l)
-            return (
-              <div
-                key={i}
-                data-index={index}
-                className={`tile ${
-                  activeTile === index
-                    ? 'active'
-                    : correct
-                    ? 'correct'
-                    : wrongSpot
-                    ? 'wrong-spot'
-                    : ''
-                } `}
-              >
-                {l}
-              </div>
-            )
-          })}
-        </div>
+
+      <p>Moves: {state.moveCount}</p>
+
+      {state.isComplete && <b>You win!</b>}
+
+      {state.jumbledWords.map((word, index) => (
+        <Word
+          key={word}
+          word={word}
+          index={index}
+          wordState={getWordState(state, index)}
+        />
       ))}
     </div>
   )
