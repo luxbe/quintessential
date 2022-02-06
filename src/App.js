@@ -10,17 +10,22 @@ import {
   getWordState,
   performSwap,
 } from './utils'
+import { HelpIcon, SettingsIcon } from './components/Icons'
+import { HelpModal, SettingsModal } from './components/Modals'
 // TODO: share button
 // TODO: one puzzle per day
 
 const initialState = getInitialState()
 function App() {
+  const [helpOpen, setHelpOpen] = useState(false)
+  const [settingsOpen, setSettingsOpen] = useState(false)
   const [state, setState] = useState(initialState)
   const onSelect = (index) => setState((s) => ({ ...s, activeIndex: index }))
   const [springs, api] = useSprings(25, (i) => ({
     x: 0,
     y: 0,
     backgroundColor: getLetterState(state, i).color,
+    // config: { duration: 1000 },
   }))
   const droppedRef = useRef()
   const clickedRef = useRef()
@@ -142,6 +147,7 @@ function App() {
     }
     const d = { x: drag.x - drop.x, y: drag.y - drop.y }
     const current = getTranslateXY(droppedRef.current)
+    const color = getBackgroundColor(droppedRef.current)
     droppedRef.current = undefined
 
     onSwap(+dragged.dataset.index, dropIndex)
@@ -151,11 +157,26 @@ function App() {
       if (index === dropIndex) {
         const [x, y] = movement
         const onRest = () => (isAnimatingRef.current = false)
-        return { from: { x: x + d.x, y: y + d.y }, to: { x: 0, y: 0 }, onRest }
+        return {
+          from: {
+            x: x + d.x,
+            y: y + d.y,
+            backgroundColor: getBackgroundColor(dragged),
+          },
+          to: { x: 0, y: 0 },
+          onRest,
+        }
       }
       if (index === draggedIndex) {
         const { x, y } = current
-        return { from: { x: x - d.x, y: y - d.y }, to: { x: 0, y: 0 } }
+        return {
+          from: {
+            x: x - d.x,
+            y: y - d.y,
+            backgroundColor: color,
+          },
+          to: { x: 0, y: 0 },
+        }
       }
       return { x: 0, y: 0 }
     })
@@ -185,15 +206,22 @@ function App() {
   const bind = useDrag(onDrag)
 
   return (
-    <div className="container">
-      <p>
-        Try to get all 5 words correct. Green means the letter is correct.
-        Yellow means it is in that word, but not that position in the word.
-        White means the letter is not in that word. Click two letters to swap
-        their position.
-      </p>
+    <>
+      <header>
+        <HelpIcon onClick={() => setHelpOpen(true)} />
 
-      <div className="board">
+        <h1>PENTAJUMBLE</h1>
+
+        <SettingsIcon onClick={() => setSettingsOpen(true)} />
+      </header>
+
+      <HelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />
+      <SettingsModal
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+      />
+
+      <section>
         {state.jumbledWords.map((word, index) => (
           <Word
             key={word}
@@ -204,11 +232,12 @@ function App() {
             wordState={getWordState(state, index)}
           />
         ))}
-      </div>
+      </section>
+
       <p>Moves: {state.moveCount}</p>
 
       {state.isComplete && <b>You win!</b>}
-    </div>
+    </>
   )
 }
 

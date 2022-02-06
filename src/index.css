@@ -1,24 +1,55 @@
+/* TODO: dark mode toggle */
 body {
+  /* background-color: #ddd;
+  color: #000; */
   background-color: #121213;
   color: white;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
   font-family: sans-serif;
   max-width: 400px;
   text-align: center;
   margin: 0 auto;
 }
 
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+  border-bottom: 1px solid #3a3a3c;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0.3rem;
+}
+
+.modal {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: black;
+  opacity: 0;
+  transition: all 250ms;
+  transform: translate(0, 50px);
+  pointer-events: none;
+}
+
+.modal.open {
+  opacity: 1;
+  transform: translate(0, 0);
+  pointer-events: all;
+}
+
 .word {
   display: flex;
   user-select: none;
   margin: 0.5rem 0 0 0.5rem;
+  color: white;
 }
 
 .tile {
@@ -39,4 +70,17 @@ body {
 
 .tile.active {
   border: 0.2rem solid white;
+}
+
+.green {
+  font-weight: bold;
+  color: #528a4c;
+}
+.yellow {
+  font-weight: bold;
+  color: #a39035;
+}
+.gray {
+  font-weight: bold;
+  color: #535355;
 }
