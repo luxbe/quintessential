@@ -1,2 +1,0 @@
-.word{margin:20px 0}.tile,.word{display:flex}.tile{align-items:center;border:1px solid;cursor:pointer;font-size:24px;height:50px;justify-content:center;margin:2px;width:50px}.tile.active{background-color:grey}.tile.correct{background-color:green}.tile.wrong-spot{background-color:#ff0}
-/*# sourceMappingURL=main.ae5f44f5.css.map*/
