@@ -2,14 +2,15 @@ import { WORDS } from './words'
 import shuffle from 'lodash/shuffle'
 import chunk from 'lodash/chunk'
 
-const getJumbledWords = (solvedWords) => {
+// TODO: could adjust swaps for difficult level
+const getJumbledWords = (solvedWords, swaps = 8) => {
   const letters = solvedWords.join('').split('')
 
   // get 8 pairs of letters that don't match and swap them
   const indexes = shuffle(new Array(25).fill('').map((_, i) => i))
   chunk(indexes, 2)
     .filter(([a, b]) => letters[a] !== letters[b])
-    .slice(0, 8)
+    .slice(0, swaps)
     .forEach((swap) => {
       const temp = letters[swap[0]]
       letters[swap[0]] = letters[swap[1]]
@@ -19,14 +20,16 @@ const getJumbledWords = (solvedWords) => {
   return chunk(letters, 5).map((w) => w.join(''))
 }
 
-const solved = shuffle([...WORDS]).slice(0, 5)
-export const getInitialState = () => ({
-  solvedWords: solved,
-  jumbledWords: getJumbledWords(solved),
-  activeIndex: null,
-  moveCount: 0,
-  isComplete: false,
-})
+export const getInitialState = () => {
+  const solvedWords = shuffle([...WORDS]).slice(0, 5)
+  return {
+    solvedWords,
+    jumbledWords: getJumbledWords(solvedWords),
+    activeIndex: null,
+    moveCount: 0,
+    isComplete: false,
+  }
+}
 
 export const performSwap = (words, i1, i2) => {
   const str = words.join('').split('')

@@ -7,12 +7,14 @@ body {
   background-color: #121213;
   color: white;
   font-family: sans-serif;
+  user-select: none;
 }
 
 #container {
   max-width: 400px;
   text-align: center;
   margin: 0 auto;
+  user-select: none;
 }
 
 header {
@@ -44,6 +46,7 @@ section {
   transition: all 250ms;
   transform: translate(0, 50px);
   pointer-events: none;
+  user-select: none;
 }
 
 .modal.open {
@@ -98,4 +101,14 @@ section {
 .gray {
   font-weight: bold;
   color: #535355;
+}
+
+.victory {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.victory button {
+  margin-top: 8px;
 }

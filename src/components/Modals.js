@@ -26,7 +26,7 @@ export const HelpModal = ({ open, onClose }) => (
   </div>
 )
 
-export const SettingsModal = ({ open, onClose }) => (
+export const SettingsModal = ({ open, onClose, onNewGame }) => (
   <div className={`modal ${open ? 'open' : ''}`}>
     <header>
       <div style={{ width: 25 }} />
@@ -35,6 +35,15 @@ export const SettingsModal = ({ open, onClose }) => (
 
       <CloseIcon onClick={onClose} />
     </header>
-    <div style={{ padding: '0 12px' }}></div>
+    <div style={{ padding: '24px 12px' }}>
+      <button
+        onClick={() => {
+          onClose()
+          onNewGame()
+        }}
+      >
+        New game
+      </button>
+    </div>
   </div>
 )

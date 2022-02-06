@@ -27,6 +27,8 @@ export const useAppState = () => {
     }))
   }, [state, api])
 
+  const onNewGame = () => setState(utils.getInitialState())
+
   const onSelect = (index) => setState((s) => ({ ...s, activeIndex: index }))
 
   const getIsComplete = ({ solvedWords, jumbledWords }) =>
@@ -184,5 +186,5 @@ export const useAppState = () => {
 
   const bindGestures = useDrag(onDrag)
 
-  return { bindGestures, springs, state }
+  return { bindGestures, springs, state, onNewGame }
 }

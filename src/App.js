@@ -4,13 +4,13 @@ import * as utils from './utils'
 import { HelpIcon, SettingsIcon } from './components/Icons'
 import { HelpModal, SettingsModal } from './components/Modals'
 import { useAppState } from './utils/useAppState'
-// TODO: share button
-// TODO: one puzzle per day
+// TODO: generated vs designed puzzles (one puzzle per day)
+// TODO: share button (day number, num moves, total time)
 
 function App() {
   const [helpOpen, setHelpOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
-  const { bindGestures, springs, state } = useAppState()
+  const { bindGestures, springs, state, onNewGame } = useAppState()
 
   return (
     <div id="container">
@@ -25,6 +25,7 @@ function App() {
       <HelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />
       <SettingsModal
         open={settingsOpen}
+        onNewGame={onNewGame}
         onClose={() => setSettingsOpen(false)}
       />
 
@@ -43,7 +44,12 @@ function App() {
 
       <p>Moves: {state.moveCount}</p>
 
-      {state.isComplete && <b>You win!</b>}
+      {state.isComplete && (
+        <div className="victory">
+          <b>You win!</b>
+          <button onClick={onNewGame}>New game</button>
+        </div>
+      )}
     </div>
   )
 }
