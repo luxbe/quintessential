@@ -5,6 +5,7 @@ import * as utils from './index'
 
 const zero = { x: 0, y: 0 }
 const initialState = utils.getInitialState()
+const config = { precision: 0.8, friction: 25, tension: 300, clamp: false }
 
 export const useAppState = () => {
   const [state, setState] = useState(initialState)
@@ -16,7 +17,7 @@ export const useAppState = () => {
     x: 0,
     y: 0,
     backgroundColor: '#121212',
-    config: { precision: 0.5 },
+    config,
   }))
 
   useEffect(() => {
