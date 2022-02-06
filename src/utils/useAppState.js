@@ -3,12 +3,15 @@ import { useDrag } from '@use-gesture/react'
 import { useSprings } from 'react-spring'
 import * as utils from './index'
 
+const zero = { x: 0, y: 0 }
 const initialState = utils.getInitialState()
+
 export const useAppState = () => {
   const [state, setState] = useState(initialState)
   const targetRef = useRef()
   const clickedRef = useRef()
   const isAnimatingRef = useRef()
+  const isTargetAnimatingRef = useRef()
   const [springs, api] = useSprings(25, () => ({
     x: 0,
     y: 0,
@@ -67,72 +70,95 @@ export const useAppState = () => {
       if (i === activeIndex) {
         return {
           from: { x: a.x - b.x, y: a.y - b.y, backgroundColor: a.color },
-          to: { x: 0, y: 0 },
+          to: zero,
         }
       } else if (i === index) {
         return {
           from: { x: b.x - a.x, y: b.y - a.y, backgroundColor: b.color },
-          to: { x: 0, y: 0 },
+          to: zero,
           onRest: () => {
             clickedRef.current = null
             isAnimatingRef.current = false
-            api.set({ x: 0, y: 0 })
+            api.set(zero)
           },
         }
       } else {
-        return { x: 0, y: 0 }
+        return zero
       }
     })
   }
 
-  const onDrag = ({ args: [draggedIndex], event, active, movement, tap }) => {
+  const onDrag = ({ args, first, event, active, movement, tap }) => {
+    const [draggedIndex] = args
     if (isAnimatingRef.current || state.isComplete) return
 
     const source = event.target
-    if (!source.className.includes('tile')) return
+    if (!source.className.includes('tile') || source.dataset.correct === 'true')
+      return
 
     if (tap) return onTap(event.target)
 
+    if (first) source.classList.add('drag')
     const a = utils.getTileEl(source)
     let b = utils.getTileEl(targetRef.current)
-    const target = utils.getTileAtXY(event.pageX, event.pageY, source)
     const [mX, mY] = movement
+
+    // const _targetRef = targetRef.current
+    const onRest = () => {
+      isAnimatingRef.current = false
+      isTargetAnimatingRef.current = false
+    }
 
     // actively dragging
     if (active) {
       // if close to source original position, preview cancel
-      if (Math.abs(mX) < 20 && Math.abs(mY) < 20) {
-        targetRef.current = null
-        // if we've got a new target, switch
-      } else if (target && b.index !== +target.dataset.index) {
-        targetRef.current = target
-        b = utils.getTileEl(target)
+      if (!isTargetAnimatingRef.current) {
+        const target = utils.getTileAtXY(event.pageX, event.pageY, source)
+        if (Math.abs(mX) < 40 && Math.abs(mY) < 40 && targetRef.current) {
+          isTargetAnimatingRef.current = true
+          targetRef.current = null
+          // if we've got a new target, switch if we aren't currently animating a switch
+        } else if (target && b.index !== +target.dataset.index) {
+          isTargetAnimatingRef.current = true
+          targetRef.current = target
+          b = utils.getTileEl(target)
+        }
       }
 
       return api.start((i) => {
         if (i === b.index && targetRef.current) {
           // if it is the current swap target, move it so it appears in the source tiles position
-          return { x: a.x - b.x, y: a.y - b.y }
+          return { x: a.x - b.x, y: a.y - b.y, onRest, backgroundColor: '#888' }
         } else if (i === draggedIndex) {
           // if it is the source tile, move it to the pointer immediately
-          return { x: mX, y: mY, immediate: true }
+          const immediate = (k) => k === 'x' || k === 'y'
+          return { x: mX, y: mY, backgroundColor: '#888', immediate }
         } else {
           // otherwise leave it in it's initial position
-          return { x: 0, y: 0 }
+          return {
+            ...zero,
+            backgroundColor: utils.getLetterState(state, i).color,
+            onRest,
+          }
         }
       })
     }
 
+    source.classList.remove('drag')
     // if finished dragging and no drop target, cancel
     if (typeof b.index !== 'number') {
-      return api.start({ x: 0, y: 0 })
+      return api.start((i) => ({
+        ...zero,
+        backgroundColor: utils.getLetterState(state, i).color,
+        onRest,
+      }))
     }
 
     // otherwise, swap with drop target
-    const o = utils.getTranslateXY(targetRef.current)
-    targetRef.current = undefined
     onSwap(a.index, b.index)
     const diff = { x: a.x - b.x, y: a.y - b.y }
+    const o = utils.getTranslateXY(targetRef.current)
+    targetRef.current = undefined
 
     // and animate back into place
     isAnimatingRef.current = true
@@ -140,17 +166,17 @@ export const useAppState = () => {
       if (index === b.index) {
         return {
           from: { x: mX + diff.x, y: mY + diff.y, backgroundColor: a.color },
-          to: { x: 0, y: 0 },
-          onRest: () => (isAnimatingRef.current = false),
+          to: zero,
+          onRest,
         }
       }
       if (index === draggedIndex) {
         return {
           from: { x: o.x - diff.x, y: o.y - diff.y, backgroundColor: b.color },
-          to: { x: 0, y: 0 },
+          to: zero,
         }
       }
-      return { x: 0, y: 0 }
+      return zero
     })
   }
 

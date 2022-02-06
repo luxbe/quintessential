@@ -3,6 +3,8 @@ import shuffle from 'lodash/shuffle'
 import chunk from 'lodash/chunk'
 
 const getJumbledWords = (solvedWords) => {
+  // take solved words.  Swap 2 solved letter to unsolved positions
+  // repeat 5 times?
   let jumble, numCorrect
   // TODO: more efficient puzzle generation
   // should just randomly swap tiles based on how many we want to leave alone
@@ -61,7 +63,7 @@ export const getLetterState = (
   const almost = !correct && unsolvedLetters.includes(jumbledLetter)
   const color = correct ? '#528a4c' : almost ? '#a39035' : '#3a3a3c'
 
-  return { index, active, color }
+  return { index, active, color, correct }
 }
 
 export const getTranslateXY = (element) => {
