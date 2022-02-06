@@ -40,7 +40,10 @@ export const performSwap = (words, i1, i2) => {
 export const getWordState = (state, index) =>
   new Array(5).fill('').map((_, i) => getLetterState(state, index * 5 + i))
 
-const getLetterState = ({ jumbledWords, solvedWords, activeIndex }, index) => {
+export const getLetterState = (
+  { jumbledWords, solvedWords, activeIndex },
+  index,
+) => {
   const wordIndex = Math.floor(index / 5)
   const solvedWord = solvedWords[wordIndex].split('')
   const jumbledWord = jumbledWords[wordIndex].split('')
@@ -52,12 +55,13 @@ const getLetterState = ({ jumbledWords, solvedWords, activeIndex }, index) => {
   const active = activeIndex === index
 
   // is this tile in the right word and position?
-  const correct = !active && solvedLetter === jumbledLetter
+  const correct = solvedLetter === jumbledLetter
 
   // is this tile in the right word but wrong position?
-  const almost = !active && !correct && unsolvedLetters.includes(jumbledLetter)
+  const almost = !correct && unsolvedLetters.includes(jumbledLetter)
+  const color = correct ? '#528a4c' : almost ? '#a39035' : '#3a3a3c'
 
-  return { index, active, correct, almost }
+  return { index, active, color }
 }
 
 export const getTranslateXY = (element) => {
@@ -65,3 +69,6 @@ export const getTranslateXY = (element) => {
   const matrix = new DOMMatrixReadOnly(style.transform)
   return { x: matrix.m41, y: matrix.m42 }
 }
+
+export const getBackgroundColor = (element) =>
+  window.getComputedStyle(element, null).getPropertyValue('background-color')

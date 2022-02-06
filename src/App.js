@@ -3,7 +3,9 @@ import { useDrag } from '@use-gesture/react'
 import { useSprings } from 'react-spring'
 import { Word } from './components/Word'
 import {
+  getBackgroundColor,
   getInitialState,
+  getLetterState,
   getTranslateXY,
   getWordState,
   performSwap,
@@ -15,12 +17,13 @@ const initialState = getInitialState()
 function App() {
   const [state, setState] = useState(initialState)
   const onSelect = (index) => setState((s) => ({ ...s, activeIndex: index }))
-  const [springs, api] = useSprings(25, () => ({
+  const [springs, api] = useSprings(25, (i) => ({
     x: 0,
     y: 0,
-    // config: { duration: 10000 },
+    backgroundColor: getLetterState(state, i).color,
   }))
   const droppedRef = useRef()
+  const clickedRef = useRef()
   const isAnimatingRef = useRef()
 
   const onDrag = ({ args: [draggedIndex], event, active, movement, tap }) => {
@@ -37,7 +40,7 @@ function App() {
 
       // if no tile is selected, select the clicked tile
       if (typeof state.activeIndex !== 'number') {
-        droppedRef.current = event.target
+        clickedRef.current = event.target
         onSelect(index)
         return
       }
@@ -51,21 +54,30 @@ function App() {
       // otherwise, swap the active tile with the one we just clicked
       const activeIndex = state.activeIndex
       isAnimatingRef.current = true
+      onSwap(activeIndex, index)
       api.start((i) => {
         if (i === activeIndex) {
           return {
-            x: event.target.offsetLeft - droppedRef.current.offsetLeft,
-            y: event.target.offsetTop - droppedRef.current.offsetTop,
+            from: {
+              x: event.target.offsetLeft - clickedRef.current.offsetLeft,
+              y: event.target.offsetTop - clickedRef.current.offsetTop,
+              backgroundColor: getBackgroundColor(event.target),
+            },
+            to: { x: 0, y: 0 },
           }
         } else if (i === draggedIndex) {
           return {
-            x: droppedRef.current.offsetLeft - event.target.offsetLeft,
-            y: droppedRef.current.offsetTop - event.target.offsetTop,
+            from: {
+              x: clickedRef.current.offsetLeft - event.target.offsetLeft,
+              y: clickedRef.current.offsetTop - event.target.offsetTop,
+              backgroundColor: getBackgroundColor(clickedRef.current),
+            },
+            to: { x: 0, y: 0 },
+
             onRest: () => {
-              droppedRef.current = null
+              clickedRef.current = null
               isAnimatingRef.current = false
-              api.start({ x: 0, y: 0, immediate: true })
-              onSwap(activeIndex, index)
+              api.set({ x: 0, y: 0 })
             },
           }
         } else {
@@ -77,7 +89,7 @@ function App() {
     }
 
     // drag
-    const dropTarget = document
+    let dropTarget = document
       .elementsFromPoint(event.pageX, event.pageY)
       .find((d) => d.classList.contains('tile') && d !== dragged)
 
@@ -90,11 +102,15 @@ function App() {
     }
 
     // TODO if there is no drop target, return everything back to normal positions somehow
-    const dropIndex = droppedRef.current
+    let dropIndex = droppedRef.current
       ? +droppedRef.current?.dataset.index
       : null
 
     if (active) {
+      if (Math.abs(movement[0]) < 20 && Math.abs(movement[1]) < 20) {
+        dropIndex = null
+        droppedRef.current = null
+      }
       api.start((i) => {
         // if it is the current swap target, move it so it appears in the dragged tiles position
         if (i === dropIndex) {
@@ -130,10 +146,12 @@ function App() {
 
     onSwap(+dragged.dataset.index, dropIndex)
 
+    isAnimatingRef.current = true
     api.start((index) => {
       if (index === dropIndex) {
         const [x, y] = movement
-        return { from: { x: x + d.x, y: y + d.y }, to: { x: 0, y: 0 } }
+        const onRest = () => (isAnimatingRef.current = false)
+        return { from: { x: x + d.x, y: y + d.y }, to: { x: 0, y: 0 }, onRest }
       }
       if (index === draggedIndex) {
         const { x, y } = current
@@ -142,6 +160,10 @@ function App() {
       return { x: 0, y: 0 }
     })
   }
+
+  api.start((i) => ({
+    backgroundColor: getLetterState(state, i).color,
+  }))
 
   const getIsComplete = ({ solvedWords, jumbledWords }) =>
     jumbledWords.every((w, wi) =>
@@ -163,7 +185,7 @@ function App() {
   const bind = useDrag(onDrag)
 
   return (
-    <div>
+    <div className="container">
       <p>
         Try to get all 5 words correct. Green means the letter is correct.
         Yellow means it is in that word, but not that position in the word.
@@ -171,20 +193,21 @@ function App() {
         their position.
       </p>
 
+      <div className="board">
+        {state.jumbledWords.map((word, index) => (
+          <Word
+            key={word}
+            word={word}
+            index={index}
+            bind={bind}
+            springs={springs}
+            wordState={getWordState(state, index)}
+          />
+        ))}
+      </div>
       <p>Moves: {state.moveCount}</p>
 
       {state.isComplete && <b>You win!</b>}
-
-      {state.jumbledWords.map((word, index) => (
-        <Word
-          key={word}
-          word={word}
-          index={index}
-          bind={bind}
-          springs={springs}
-          wordState={getWordState(state, index)}
-        />
-      ))}
     </div>
   )
 }

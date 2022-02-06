@@ -4,8 +4,6 @@ import { animated } from 'react-spring'
 export const Word = ({ word, index: wi, wordState, bind, springs }) => {
   return (
     <div className="word">
-      <p style={{ marginRight: 8 }}>word {wi + 1}:</p>
-
       {word.split('').map((letter, li) => {
         const index = wi * 5 + li
         return (
