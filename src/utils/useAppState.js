@@ -6,6 +6,7 @@ import * as utils from './index'
 const zero = { x: 0, y: 0 }
 const initialState = utils.getInitialState()
 const config = { precision: 0.8, friction: 25, tension: 300, clamp: false }
+const ALLOW_QUICK_SWAP = true
 
 export const useAppState = () => {
   const [state, setState] = useState(initialState)
@@ -113,7 +114,7 @@ export const useAppState = () => {
     // actively dragging
     if (active) {
       // if close to source original position, preview cancel
-      if (!isTargetAnimatingRef.current) {
+      if (ALLOW_QUICK_SWAP || !isTargetAnimatingRef.current) {
         const target = utils.getTileAtXY(event.pageX, event.pageY, source)
         if (Math.abs(mX) < 40 && Math.abs(mY) < 40 && targetRef.current) {
           isTargetAnimatingRef.current = true

@@ -3,23 +3,20 @@ import shuffle from 'lodash/shuffle'
 import chunk from 'lodash/chunk'
 
 const getJumbledWords = (solvedWords) => {
-  // take solved words.  Swap 2 solved letter to unsolved positions
-  // repeat 5 times?
-  let jumble, numCorrect
-  // TODO: more efficient puzzle generation
-  // should just randomly swap tiles based on how many we want to leave alone
-  do {
-    jumble = chunk(shuffle(solvedWords.join('').split('')), 5).map((w) =>
-      w.join(''),
-    )
-    numCorrect = jumble
-      .map((word, wi) =>
-        word.split('').filter((c, ci) => c === solvedWords[wi][ci]),
-      )
-      .flat().length
-  } while (numCorrect !== 10)
+  const letters = solvedWords.join('').split('')
 
-  return jumble
+  // get 8 pairs of letters that don't match and swap them
+  const indexes = shuffle(new Array(25).fill('').map((_, i) => i))
+  chunk(indexes, 2)
+    .filter(([a, b]) => letters[a] !== letters[b])
+    .slice(0, 8)
+    .forEach((swap) => {
+      const temp = letters[swap[0]]
+      letters[swap[0]] = letters[swap[1]]
+      letters[swap[1]] = temp
+    })
+
+  return chunk(letters, 5).map((w) => w.join(''))
 }
 
 const solved = shuffle([...WORDS]).slice(0, 5)
