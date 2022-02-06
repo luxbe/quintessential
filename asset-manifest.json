@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/pentajumble/static/css/main.b845509e.css",
-    "main.js": "/pentajumble/static/js/main.f3269465.js",
+    "main.css": "/pentajumble/static/css/main.348cf3cb.css",
+    "main.js": "/pentajumble/static/js/main.9c290e34.js",
     "index.html": "/pentajumble/index.html",
-    "main.b845509e.css.map": "/pentajumble/static/css/main.b845509e.css.map",
-    "main.f3269465.js.map": "/pentajumble/static/js/main.f3269465.js.map"
+    "main.348cf3cb.css.map": "/pentajumble/static/css/main.348cf3cb.css.map",
+    "main.9c290e34.js.map": "/pentajumble/static/js/main.9c290e34.js.map"
   },
   "entrypoints": [
-    "static/css/main.b845509e.css",
-    "static/js/main.f3269465.js"
+    "static/css/main.348cf3cb.css",
+    "static/js/main.9c290e34.js"
   ]
 }
