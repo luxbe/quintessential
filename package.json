@@ -1,5 +1,5 @@
 {
-  "name": "penta-jumble",
+  "name": "pentajumble",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -16,7 +16,7 @@
     "react-spring": "^9.4.2",
     "web-vitals": "^2.1.0"
   },
-  "homepage": "/penta-jumble",
+  "homepage": "/pentajumble",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

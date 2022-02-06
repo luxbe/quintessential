@@ -65,10 +65,27 @@ export const getLetterState = (
 }
 
 export const getTranslateXY = (element) => {
+  if (!element) return { x: 0, y: 0 }
   const style = window.getComputedStyle(element)
   const matrix = new DOMMatrixReadOnly(style.transform)
   return { x: matrix.m41, y: matrix.m42 }
 }
 
 export const getBackgroundColor = (element) =>
-  window.getComputedStyle(element, null).getPropertyValue('background-color')
+  element
+    ? window
+        .getComputedStyle(element, null)
+        .getPropertyValue('background-color')
+    : null
+
+export const getTileEl = (el) => ({
+  x: el?.offsetLeft,
+  y: el?.offsetTop,
+  color: getBackgroundColor(el),
+  index: el?.dataset?.index ? +el.dataset.index : null,
+})
+
+export const getTileAtXY = (x, y, _el) =>
+  document
+    .elementsFromPoint(x, y)
+    .find((el) => el.classList.contains('tile') && el !== _el)
