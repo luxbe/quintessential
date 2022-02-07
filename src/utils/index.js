@@ -23,6 +23,8 @@ const getJumbledWords = (solvedWords, swaps = 8) => {
 
 export const getInitialState = (param) => {
   let puzzle, date
+  let moveCount = 0
+  let seconds = 0
 
   if (!param) {
     date = new Date()
@@ -48,13 +50,23 @@ export const getInitialState = (param) => {
     const solved = shuffle([...WORDS]).slice(0, 5)
     puzzle = [solved, getJumbledWords(solved)]
   }
-  const [solvedWords, jumbledWords] = puzzle
+  let [solvedWords, jumbledWords] = puzzle
+
+  const save = localStorage.getItem(`pentajumble-save-${solvedWords.join(',')}`)
+  if (save) {
+    const [words, other] = save.split(':')
+    const [moves, time] = other.split('-')
+    jumbledWords = words.split(',')
+    moveCount = +moves
+    seconds = +time
+  }
 
   return {
     solvedWords,
     jumbledWords,
+    moveCount,
+    seconds,
     activeIndex: null,
-    moveCount: 0,
     isComplete: false,
   }
 }

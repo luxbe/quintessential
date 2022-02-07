@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useDrag } from '@use-gesture/react'
 import { useSprings } from 'react-spring'
 import * as utils from './index'
+import { useStopwatch } from 'react-timer-hook'
 
 const zero = { x: 0, y: 0 }
 const config = { precision: 0.9, friction: 15, tension: 120, clamp: true }
@@ -22,13 +23,38 @@ export const useAppState = () => {
     config,
   }))
 
+  const offset = new Date()
+  offset.setSeconds(offset.getSeconds() + state.seconds)
+  const {
+    seconds,
+    minutes,
+    reset: resetStopwatch,
+  } = useStopwatch({
+    autoStart: true,
+    offsetTimestamp: offset,
+  })
+
   useEffect(() => {
     api.start((i) => ({
       backgroundColor: utils.getLetterState(state, i).color,
     }))
   }, [state, api])
 
-  const onNewGame = () => setState(utils.getInitialState())
+  useEffect(() => {
+    localStorage.setItem(
+      `pentajumble-save-${state.solvedWords.join(',')}`,
+      `${state.jumbledWords.join(',')}:${state.moveCount}-${state.seconds}`,
+    )
+  }, [state])
+
+  useEffect(() => {
+    setState((s) => ({ ...s, seconds: seconds + minutes * 60 }))
+  }, [seconds, minutes])
+
+  const onNewGame = () => {
+    setState(utils.getInitialState('random'))
+    resetStopwatch()
+  }
 
   const onSelect = (index) => setState((s) => ({ ...s, activeIndex: index }))
 

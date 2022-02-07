@@ -45,8 +45,11 @@ function App() {
       />
 
       <StatsModal
-        open={modalState.stats}
         onNewGame={onNewGame}
+        open={modalState.stats}
+        moveCount={state.moveCount}
+        seconds={state.seconds}
+        isComplete={state.isComplete}
         onClose={() => setModalState({ stats: false })}
       />
 
@@ -64,6 +67,7 @@ function App() {
       </section>
 
       <p>Moves: {state.moveCount}</p>
+      <p>Time: {state.seconds}</p>
 
       {state.isComplete && (
         <div className="flex flex-col items-center space-y-4">

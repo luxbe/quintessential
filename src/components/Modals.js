@@ -37,22 +37,32 @@ export const SettingsModal = ({ open, onClose, onNewGame }) => (
   </Modal>
 )
 
-export const StatsModal = ({ open, onClose, onNewGame }) => (
+export const StatsModal = ({
+  open,
+  onClose,
+  isComplete,
+  moveCount,
+  seconds,
+}) => (
   <Modal
     open={open}
     onClose={onClose}
     title="Statistics"
     className="flex flex-col items-center"
   >
-    <p>Moves: 3</p>
-    <p>Time: 90 seconds</p>
-    <button
-      onClick={() => {
-        // TODO: copy stats from last game
-      }}
-    >
-      Share
-    </button>
+    {isComplete && (
+      <div>
+        <p>Moves: {moveCount}</p>
+        <p>Time: {seconds} seconds</p>
+        <button
+          onClick={() => {
+            // TODO: copy stats
+          }}
+        >
+          Share
+        </button>
+      </div>
+    )}
   </Modal>
 )
 
