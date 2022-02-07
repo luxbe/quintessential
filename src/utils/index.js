@@ -1,6 +1,7 @@
 import { WORDS } from './words'
 import shuffle from 'lodash/shuffle'
 import chunk from 'lodash/chunk'
+import { DAILIES } from './dailies'
 
 // TODO: could adjust swaps for difficult level
 const getJumbledWords = (solvedWords, swaps = 8) => {
@@ -20,11 +21,38 @@ const getJumbledWords = (solvedWords, swaps = 8) => {
   return chunk(letters, 5).map((w) => w.join(''))
 }
 
-export const getInitialState = () => {
-  const solvedWords = shuffle([...WORDS]).slice(0, 5)
+export const getInitialState = (param) => {
+  let puzzle, date
+
+  if (!param) {
+    date = new Date()
+  } else if (param !== 'random') {
+    date = new Date(new Date(param) + 1000 * 60 * 60 * 24)
+    date.setHours(0, 0, 0, 0)
+  }
+  if (date) {
+    const firstDay = new Date('2022-02-08')
+    firstDay.setHours(0, 0, 0, 0)
+    const day = Number(date) - Number(firstDay)
+    const dayIndex = Math.floor(day / 1000 / 60 / 60 / 24)
+    puzzle = DAILIES[dayIndex]
+    if (puzzle) {
+      // uncomment to generate a random puzzle from static words
+      // puzzle[1] = getJumbledWords(puzzle[0].split(',')).join(',')
+
+      puzzle = puzzle.map((p) => p.split(','))
+    }
+  }
+
+  if (!puzzle) {
+    const solved = shuffle([...WORDS]).slice(0, 5)
+    puzzle = [solved, getJumbledWords(solved)]
+  }
+  const [solvedWords, jumbledWords] = puzzle
+
   return {
     solvedWords,
-    jumbledWords: getJumbledWords(solvedWords),
+    jumbledWords,
     activeIndex: null,
     moveCount: 0,
     isComplete: false,

@@ -4,11 +4,13 @@ import { useSprings } from 'react-spring'
 import * as utils from './index'
 
 const zero = { x: 0, y: 0 }
-const initialState = utils.getInitialState()
 const config = { precision: 0.9, friction: 15, tension: 120, clamp: true }
 
 export const useAppState = () => {
-  const [state, setState] = useState(initialState)
+  const puzzle = new URLSearchParams(
+    window.location.search.replace('?', ''),
+  ).get('p')
+  const [state, setState] = useState(utils.getInitialState(puzzle))
   const targetRef = useRef()
   const clickedRef = useRef()
   const isAnimatingRef = useRef()
