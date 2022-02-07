@@ -9,13 +9,13 @@ import { useAppState } from './utils/useAppState'
 
 const modalInitialState = { help: false, settings: false, win: false }
 function App() {
-  const [modalState, setModalState] = useState(modalInitialState)
+  const [modalState, _setModalState] = useState(modalInitialState)
   const { bindGestures, springs, state, onNewGame } = useAppState()
-  const updateModal = (c) => setModalState((ms) => ({ ...ms, ...c }))
+  const setModalState = (c) => _setModalState((ms) => ({ ...ms, ...c }))
 
   useEffect(() => {
     if (state.isComplete) {
-      setTimeout(() => setModalState({ win: true }), 2000)
+      setTimeout(() => setModalState({ stats: true }), 2000)
     }
   }, [state.isComplete])
 
@@ -23,31 +23,31 @@ function App() {
     <div className="select-none" id="container">
       <header>
         <div className="w-[4rem]">
-          <HelpIcon onClick={() => updateModal({ help: true })} />
+          <HelpIcon onClick={() => setModalState({ help: true })} />
         </div>
 
         <h1>PENTAJUMBLE</h1>
         <div className="flex space-x-2 w-[4rem]">
-          <StatsIcon onClick={() => updateModal({ settings: true })} />
-          <SettingsIcon onClick={() => updateModal({ settings: true })} />
+          <StatsIcon onClick={() => setModalState({ stats: true })} />
+          <SettingsIcon onClick={() => setModalState({ settings: true })} />
         </div>
       </header>
 
       <HelpModal
         open={modalState.help}
-        onClose={() => updateModal({ help: false })}
+        onClose={() => setModalState({ help: false })}
       />
 
       <SettingsModal
         open={modalState.settings}
         onNewGame={onNewGame}
-        onClose={() => updateModal({ settings: false })}
+        onClose={() => setModalState({ settings: false })}
       />
 
       <StatsModal
-        open={modalState.win}
+        open={modalState.stats}
         onNewGame={onNewGame}
-        onClose={() => updateModal({ win: false })}
+        onClose={() => setModalState({ stats: false })}
       />
 
       <section>
@@ -66,7 +66,7 @@ function App() {
       <p>Moves: {state.moveCount}</p>
 
       {state.isComplete && (
-        <div className="victory">
+        <div className="flex flex-col items-center space-y-4">
           <b>You win!</b>
           <button onClick={onNewGame}>New game</button>
         </div>

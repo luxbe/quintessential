@@ -19,14 +19,22 @@ h1 {
   font-weight: 700;
 }
 
+p {
+  @apply my-4;
+}
+
 section {
   @apply flex flex-col justify-center items-center mt-[1rem];
 }
 
 .modal {
-  @apply absolute inset-0 bg-dark-gray opacity-0 pointer-events-none z-20;
+  @apply fixed inset-0 bg-background opacity-0 pointer-events-none z-20 flex justify-center;
   transition: all 250ms;
   transform: translate(0, 50px);
+}
+
+.modal-inner {
+  @apply w-[26rem] h-[26rem] bg-dark-gray z-30 my-24;
 }
 
 .modal.open {
@@ -48,10 +56,14 @@ section {
 div.tile.index.color.active,
 div.tile.index.color.drag {
   @apply z-10;
-  background-color: #999;
+  background-color: #999 !important;
   box-shadow: rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
 
 .tile.highlight {
   box-shadow: inset rgb(255, 255, 255) 0px 0px 2px 2px;
+}
+
+button {
+  @apply block bg-white text-black px-4 py-1 rounded-md;
 }
