@@ -1,116 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* TODO: dark mode toggle */
 body {
-  /* background-color: #ddd;
-  color: #000; */
-  margin: 0;
-  overflow: hidden;
-  background-color: #121213;
-  color: white;
-  font-family: sans-serif;
-  user-select: none;
+  @apply font-sans text-white overflow-hidden m-0 bg-dark-gray;
 }
 
 #container {
-  max-width: 400px;
-  text-align: center;
-  margin: 0 auto;
-  user-select: none;
+  @apply select-none mx-auto text-center max-w-lg;
 }
 
 header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 12px;
-  border-bottom: 1px solid #3a3a3c;
-  max-width: 380px;
-  margin: 0 auto;
+  @apply flex justify-between items-center px-4 py-4 border-b border-gray max-w-lg mx-auto;
+}
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
 }
 
 section {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 1rem;
+  @apply flex flex-col justify-center items-center mt-[1rem];
 }
 
 .modal {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: #121213;
-  opacity: 0;
+  @apply absolute inset-0 bg-dark-gray opacity-0 pointer-events-none z-20;
   transition: all 250ms;
   transform: translate(0, 50px);
-  pointer-events: none;
-  user-select: none;
-  z-index: 12;
 }
 
 .modal.open {
-  opacity: 1;
+  @apply opacity-100 pointer-events-auto;
   transform: translate(0, 0);
-  pointer-events: all;
 }
 
 .word {
-  display: flex;
-  user-select: none;
-  margin: 0.5rem 0 0 0.5rem;
-  color: white;
+  @apply flex select-none mt-[0.5rem] ml-[0.5rem] text-white;
 }
 
 .tile {
-  margin-right: 0.5rem;
-  cursor: pointer;
-  width: 4rem;
-  height: 4rem;
-  display: flex;
-  position: relative;
-  justify-content: center;
-  align-items: center;
-  font-size: 2.3rem;
-  font-weight: bold;
+  @apply mr-[0.5rem] cursor-pointer w-[4rem] h-[4rem] flex relative justify-center items-center text-[2.3rem] font-bold uppercase box-border;
   touch-action: none;
   text-decoration: none;
-  box-sizing: border-box;
-  text-transform: uppercase;
   transition: background-color 200ms, box-shadow 200ms;
 }
 
-.tile.active,
-.tile.drag {
-  background-color: #999 !important;
+div.tile.index.color.active,
+div.tile.index.color.drag {
+  @apply z-10;
+  background-color: #999;
   box-shadow: rgba(0, 0, 0, 0.23) 0px 6px 6px;
-  z-index: 10;
 }
 
 .tile.highlight {
   box-shadow: inset rgb(255, 255, 255) 0px 0px 2px 2px;
-}
-
-.green {
-  font-weight: bold;
-  color: #528a4c;
-}
-.yellow {
-  font-weight: bold;
-  color: #a39035;
-}
-.gray {
-  font-weight: bold;
-  color: #535355;
-}
-
-.victory {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.victory button {
-  margin-top: 8px;
 }
