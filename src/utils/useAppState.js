@@ -5,8 +5,7 @@ import * as utils from './index'
 
 const zero = { x: 0, y: 0 }
 const initialState = utils.getInitialState()
-const config = { precision: 0.8, friction: 25, tension: 300, clamp: false }
-const ALLOW_QUICK_SWAP = true
+const config = { precision: 0.9, friction: 15, tension: 120, clamp: true }
 
 export const useAppState = () => {
   const [state, setState] = useState(initialState)
@@ -92,7 +91,7 @@ export const useAppState = () => {
     })
   }
 
-  const onDrag = ({ args, first, event, active, movement, tap }) => {
+  const onDrag = ({ args, first, event, velocity, active, movement, tap }) => {
     const [draggedIndex] = args
     if (isAnimatingRef.current || state.isComplete) return
 
@@ -115,8 +114,9 @@ export const useAppState = () => {
 
     // actively dragging
     if (active) {
+      const speed = Math.abs(velocity[0]) + Math.abs(velocity[1])
       // if close to source original position, preview cancel
-      if (ALLOW_QUICK_SWAP || !isTargetAnimatingRef.current) {
+      if (speed < 0.1) {
         const target = utils.getTileAtXY(event.pageX, event.pageY, source)
         if (Math.abs(mX) < 40 && Math.abs(mY) < 40 && targetRef.current) {
           isTargetAnimatingRef.current = true
@@ -149,6 +149,11 @@ export const useAppState = () => {
     }
 
     source.classList.remove('drag')
+    if (!targetRef.current) {
+      targetRef.current = utils.getTileAtXY(event.pageX, event.pageY, source)
+      b = utils.getTileEl(targetRef.current)
+    }
+
     // if finished dragging and no drop target, cancel
     if (typeof b.index !== 'number') {
       return api.start((i) => ({
