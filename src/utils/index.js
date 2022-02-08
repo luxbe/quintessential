@@ -4,7 +4,7 @@ import chunk from 'lodash/chunk'
 import { DAILIES } from './dailies'
 
 // TODO: could adjust swaps for difficult level
-const getJumbledWords = (solvedWords, swaps = 8) => {
+export const getJumbledWords = (solvedWords, swaps = 8) => {
   const letters = solvedWords.join('').split('')
 
   // get 8 pairs of letters that don't match and swap them
@@ -52,7 +52,7 @@ export const getInitialState = (param) => {
     puzzle = DAILIES[dayIndex]
     if (puzzle) {
       // uncomment to generate a random puzzle from static words
-      // puzzle[1] = getJumbledWords(puzzle[0].split(',')).join(',')
+      puzzle[1] = getJumbledWords(puzzle[0].split(',')).join(',')
 
       puzzle = puzzle.map((p) => p.split(','))
     }
@@ -140,10 +140,10 @@ export const getBackgroundColor = (element) =>
     : null
 
 export const getTileEl = (el) => ({
-  x: el?.offsetLeft,
-  y: el?.offsetTop,
-  color: getBackgroundColor(el),
-  index: el?.dataset?.index ? +el.dataset.index : null,
+  x: el ? el.offsetLeft : null,
+  y: el ? el.offsetTop : null,
+  color: el ? getBackgroundColor(el) : null,
+  index: el ? +el.dataset.index : null,
 })
 
 export const getTileAtXY = (x, y, _el) =>
