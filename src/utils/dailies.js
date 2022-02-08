@@ -1,6 +1,6 @@
 // starts from 2021-02-07
 // TODO: saturday/sunday should use uniques, rest of the week uses random
-export const UNIQUES = [
+export const DAILIES = [
   ['melon,apple,grape,peach,lemon', 'megeo,pmelp,leapo,arach,lnpne'], // fruit
   ['china,india,japan,napal,yemen', 'cjaae,iadpn,hapnn,aniil,namey'], // countries
   ['space,phase,probe,cloak,prime', 'srrke,bhesm,ppopa,olcac,eaiep'], // star-trek-1

@@ -70,11 +70,11 @@ export const StatsModal = ({
       <div className="flex space-x-8 mb-6">
         <Stat num={stats.winCount} label="Wins" />
         <Stat
-          num={stats.moveCount / (stats.winCount || 1)}
+          num={stats.moveCount / (stats.winCount || 1).toFixed(2)}
           label="Avg. Moves"
         />
         <Stat
-          num={stats.secondCount / (stats.winCount || 1)}
+          num={stats.secondCount / (stats.winCount || 1).toFixed(2)}
           label="Avg. Time"
         />
       </div>
@@ -84,7 +84,14 @@ export const StatsModal = ({
           <h2 className="mb-2">Last Game</h2>
 
           <div className="flex space-x-8 mb-6">
-            <Stat num={puzzleNumber + 1} label="Puzzle #" />
+            <Stat
+              num={
+                typeof puzzleNumber === 'number'
+                  ? puzzleNumber + 1
+                  : puzzleNumber
+              }
+              label="Puzzle #"
+            />
             <Stat num={moveCount} label="Moves" />
             <Stat num={seconds} label="Seconds" />
           </div>

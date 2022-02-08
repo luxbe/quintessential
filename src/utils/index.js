@@ -52,7 +52,7 @@ export const getInitialState = (param) => {
     puzzle = DAILIES[dayIndex]
     if (puzzle) {
       // uncomment to generate a random puzzle from static words
-      puzzle[1] = getJumbledWords(puzzle[0].split(',')).join(',')
+      // puzzle[1] = getJumbledWords(puzzle[0].split(',')).join(',')
 
       puzzle = puzzle.map((p) => p.split(','))
     }
