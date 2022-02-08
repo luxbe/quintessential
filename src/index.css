@@ -14,10 +14,12 @@ body {
 header {
   @apply flex justify-between items-center px-4 py-4 border-b border-gray max-w-lg mx-auto;
 }
+
 h1 {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
 }
+
 h2 {
   font-size: 1.2rem;
   font-weight: 400;
@@ -40,7 +42,7 @@ section {
 }
 
 .modal-inner {
-  @apply w-[26rem] h-[26rem] bg-dark-gray z-30 my-24;
+  @apply max-w-[100vw] w-[26rem] h-[26rem] bg-dark-gray z-30 my-24 mx-2;
 }
 
 .modal.open {

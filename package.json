@@ -1,5 +1,5 @@
 {
-  "name": "pentajumble",
+  "name": "quintessential",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -17,7 +17,7 @@
     "react-timer-hook": "^3.0.5",
     "web-vitals": "^2.1.0"
   },
-  "homepage": "/pentajumble",
+  "homepage": "/quintessential",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

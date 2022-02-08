@@ -18,12 +18,12 @@ function App() {
   return (
     <div className="select-none" id="container">
       <header>
-        <div className="w-[4rem]">
+        <div className="w-[3rem]">
           <HelpIcon onClick={() => setModalState({ help: true })} />
         </div>
 
-        <h1>PENTAJUMBLE</h1>
-        <div className="flex space-x-2 w-[4rem]">
+        <h1>QUINTESSENTIAL</h1>
+        <div className="flex space-x-2 w-[3rem]">
           <StatsIcon onClick={() => setModalState({ stats: true })} />
           <SettingsIcon onClick={() => setModalState({ settings: true })} />
         </div>

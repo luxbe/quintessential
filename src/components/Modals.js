@@ -55,7 +55,7 @@ export const StatsModal = ({
   stats,
 }) => {
   const [showMessage, setShowMessage] = useState(false)
-  const shareText = `Pentajumble #${
+  const shareText = `Quintessential #${
     puzzleNumber + 1
   }: ${moveCount} Moves in ${seconds} seconds`
   return (
@@ -69,8 +69,14 @@ export const StatsModal = ({
 
       <div className="flex space-x-8 mb-6">
         <Stat num={stats.winCount} label="Wins" />
-        <Stat num={stats.moveCount / stats.winCount} label="Avg. Moves" />
-        <Stat num={stats.secondCount / stats.winCount} label="Avg. Time" />
+        <Stat
+          num={stats.moveCount / (stats.winCount || 1)}
+          label="Avg. Moves"
+        />
+        <Stat
+          num={stats.secondCount / (stats.winCount || 1)}
+          label="Avg. Time"
+        />
       </div>
 
       {isComplete && (

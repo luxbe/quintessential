@@ -22,7 +22,9 @@ const getJumbledWords = (solvedWords, swaps = 8) => {
 }
 
 export const getInitialState = (param) => {
-  const _stats = JSON.parse(localStorage.getItem(`pentajumble-stats`) || '{}')
+  const _stats = JSON.parse(
+    localStorage.getItem(`quintessential-stats`) || '{}',
+  )
   let puzzle, date
   let puzzleNumber
   let moveCount = 0
@@ -62,7 +64,9 @@ export const getInitialState = (param) => {
   }
   let [solvedWords, jumbledWords] = puzzle
 
-  const save = localStorage.getItem(`pentajumble-save-${solvedWords.join(',')}`)
+  const save = localStorage.getItem(
+    `quintessential-save-${solvedWords.join(',')}`,
+  )
   if (save) {
     const [words, other] = save.split(':')
     const [moves, time] = other.split('-')
