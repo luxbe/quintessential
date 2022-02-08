@@ -1,9 +1,10 @@
 import { WORDS } from './words'
 import shuffle from 'lodash/shuffle'
 import chunk from 'lodash/chunk'
-import { DAILIES } from './dailies'
+import { PUZZLES } from './puzzles'
 
-// TODO: could adjust swaps for difficult level
+const GENERATE_SOLVE = false
+
 export const getJumbledWords = (solvedWords, swaps = 8) => {
   const letters = solvedWords.join('').split('')
 
@@ -44,15 +45,16 @@ export const getInitialState = (param) => {
   }
 
   if (date) {
-    const firstDay = new Date('2022-02-08')
+    const firstDay = new Date('2022-02-07')
     firstDay.setHours(0, 0, 0, 0)
     const day = Number(date) - Number(firstDay)
     const dayIndex = Math.floor(day / 1000 / 60 / 60 / 24)
     puzzleNumber = dayIndex
-    puzzle = DAILIES[dayIndex]
+    puzzle = PUZZLES[dayIndex]
     if (puzzle) {
-      // uncomment to generate a random puzzle from static words
-      // puzzle[1] = getJumbledWords(puzzle[0].split(',')).join(',')
+      if (GENERATE_SOLVE) {
+        puzzle[1] = getJumbledWords(puzzle[0].split(',')).join(',')
+      }
 
       puzzle = puzzle.map((p) => p.split(','))
     }
