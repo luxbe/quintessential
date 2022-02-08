@@ -24,7 +24,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "generate": "node -r esm ./src/utils/generate.js",
-    "deploy": "gh-pages -d build"
+    "deploy": "yarn run build; echo 'quintessential.fun' > ./build/CNAME && gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
