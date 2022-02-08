@@ -83,7 +83,7 @@ export const useAppState = ({ onWin }) => {
         updateStats((s) => ({
           ...s,
           winCount: s.winCount + 1,
-          moveCount: s.moveCount + moveCount,
+          moveCount: s.moveCount + moveCount + 1,
           secondCount: s.secondCount + state.seconds,
         }))
         stopStopwatch()
