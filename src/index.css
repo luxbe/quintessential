@@ -2,9 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* TODO: dark mode toggle */
 body {
-  @apply font-sans text-white overflow-hidden m-0 bg-dark-gray;
+  @apply font-sans text-white overflow-hidden m-0 bg-dark-gray min-w-[350px];
 }
 
 #container {
@@ -32,7 +31,7 @@ p {
 }
 
 section {
-  @apply flex flex-col justify-center items-center mt-[1rem];
+  @apply flex flex-col justify-center items-center;
 }
 
 .modal {

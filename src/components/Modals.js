@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { getHumanizedTime } from '../utils'
 import { CloseIcon } from './Icons'
 
 export const HelpModal = ({ open, onClose }) => (
@@ -25,7 +26,7 @@ export const SettingsModal = ({ open, onClose, onNewGame }) => (
     open={open}
     onClose={onClose}
     title="Settings"
-    className="flex flex-col items-center"
+    className="flex flex-col items-center space-y-4"
   >
     <button
       onClick={() => {
@@ -33,7 +34,17 @@ export const SettingsModal = ({ open, onClose, onNewGame }) => (
         onNewGame()
       }}
     >
-      New game
+      Random game
+    </button>
+    <button
+      onClick={() => {
+        Object.keys(localStorage)
+          .filter((k) => k.startsWith('quintessential'))
+          .forEach((k) => localStorage.removeItem(k))
+        window.location.reload()
+      }}
+    >
+      Clear Stats
     </button>
   </Modal>
 )
@@ -55,9 +66,17 @@ export const StatsModal = ({
   stats,
 }) => {
   const [showMessage, setShowMessage] = useState(false)
-  const shareText = `Quintessential #${
-    puzzleNumber + 1
-  }: ${moveCount} Moves in ${seconds} seconds`
+  const puzzleName =
+    typeof puzzleNumber === 'number' ? `${puzzleNumber + 1}` : puzzleNumber
+  const time = getHumanizedTime(seconds)
+  const avgTime = getHumanizedTime(stats.secondCount / (stats.winCount || 1))
+  const avgMoves = stats.moveCount / (stats.winCount || 1).toFixed(2)
+  const shareText = `Quintessential #${puzzleName}: ${moveCount} moves in ${time}`
+  const onShare = () => {
+    setShowMessage(true)
+    setTimeout(() => setShowMessage(false), 2500)
+    navigator.clipboard.writeText(shareText)
+  }
   return (
     <Modal
       open={open}
@@ -69,14 +88,8 @@ export const StatsModal = ({
 
       <div className="flex space-x-8 mb-6">
         <Stat num={stats.winCount} label="Wins" />
-        <Stat
-          num={stats.moveCount / (stats.winCount || 1).toFixed(2)}
-          label="Avg. Moves"
-        />
-        <Stat
-          num={stats.secondCount / (stats.winCount || 1).toFixed(2)}
-          label="Avg. Time"
-        />
+        <Stat num={avgMoves} label="Avg. Moves" />
+        <Stat num={avgTime} label="Avg. Time" />
       </div>
 
       {isComplete && (
@@ -84,26 +97,12 @@ export const StatsModal = ({
           <h2 className="mb-2">Last Game</h2>
 
           <div className="flex space-x-8 mb-6">
-            <Stat
-              num={
-                typeof puzzleNumber === 'number'
-                  ? puzzleNumber + 1
-                  : puzzleNumber
-              }
-              label="Puzzle #"
-            />
+            <Stat num={puzzleName} label="Puzzle #" />
             <Stat num={moveCount} label="Moves" />
-            <Stat num={seconds} label="Seconds" />
+            <Stat num={time} label="Time" />
           </div>
-          <button
-            onClick={() => {
-              setShowMessage(true)
-              setTimeout(() => setShowMessage(false), 2500)
-              navigator.clipboard.writeText(shareText)
-            }}
-          >
-            {showMessage ? 'Copied!' : 'Share'}
-          </button>
+
+          <button onClick={onShare}>{showMessage ? 'Copied!' : 'Share'}</button>
         </div>
       )}
     </Modal>

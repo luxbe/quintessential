@@ -152,3 +152,8 @@ export const getTileAtXY = (x, y, _el) =>
   document
     .elementsFromPoint(x, y)
     .find((el) => el.classList.contains('tile') && el !== _el)
+
+export const getHumanizedTime = (s) =>
+  `${Math.floor(s / 60)}:${padNum(Math.floor(s % 60))}`
+
+export const padNum = (n) => n.toString().padStart(2, '0')

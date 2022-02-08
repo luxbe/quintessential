@@ -4,8 +4,6 @@ import * as utils from './utils'
 import { HelpIcon, SettingsIcon, StatsIcon } from './components/Icons'
 import { HelpModal, SettingsModal, StatsModal } from './components/Modals'
 import { useAppState } from './utils/useAppState'
-// TODO: generated vs designed puzzles (one puzzle per day)
-// TODO: share button (day number, num moves, total time)
 
 const modalInitialState = { help: false, settings: false, win: false }
 function App() {
@@ -28,6 +26,13 @@ function App() {
           <SettingsIcon onClick={() => setModalState({ settings: true })} />
         </div>
       </header>
+
+      <div className="flex justify-between px-4 mt-5 mb-3 max-w-sm mx-auto">
+        <span>{utils.getHumanizedTime(state.seconds)}</span>
+        <span>
+          {state.moveCount} Move{state.moveCount === 1 ? '' : 's'}
+        </span>
+      </div>
 
       <HelpModal
         open={modalState.help}
@@ -59,17 +64,6 @@ function App() {
           />
         ))}
       </section>
-
-      <p>
-        Time: {state.seconds}, Moves: {state.moveCount}
-      </p>
-
-      {state.isComplete && (
-        <div className="flex flex-col items-center space-y-4">
-          <b>You win!</b>
-          {/* <button onClick={onNewGame}>New game</button> */}
-        </div>
-      )}
     </div>
   )
 }
