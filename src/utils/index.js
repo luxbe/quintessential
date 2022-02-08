@@ -133,7 +133,7 @@ export const getLetterState = (
   const COLORS = ['#3a3a3c', '#528a4c', '#a39035']
   const color = COLORS[state]
 
-  return { index, active, color, state }
+  return { index, active, color, state, correct }
 }
 
 export const getTranslateXY = (element) => {
