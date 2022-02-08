@@ -6,6 +6,7 @@ import { useStopwatch } from 'react-timer-hook'
 
 const zero = { x: 0, y: 0 }
 const config = { precision: 0.9, friction: 15, tension: 120, clamp: true }
+const TIMER_MAX = 999
 
 export const useAppState = ({ onWin }) => {
   const puzzle = new URLSearchParams(
@@ -56,7 +57,8 @@ export const useAppState = ({ onWin }) => {
   }, [state])
 
   useEffect(() => {
-    setState((s) => ({ ...s, seconds: seconds + minutes * 60 }))
+    if (seconds + minutes * 60 < TIMER_MAX)
+      setState((s) => ({ ...s, seconds: seconds + minutes * 60 }))
   }, [seconds, minutes])
 
   const onNewGame = () => {
