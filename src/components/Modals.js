@@ -64,6 +64,7 @@ export const StatsModal = ({
   seconds,
   puzzleNumber,
   stats,
+  boardState,
 }) => {
   const [showMessage, setShowMessage] = useState(false)
   const puzzleName =
@@ -71,7 +72,7 @@ export const StatsModal = ({
   const time = getHumanizedTime(seconds)
   const avgTime = getHumanizedTime(stats.secondCount / (stats.winCount || 1))
   const avgMoves = stats.moveCount / (stats.winCount || 1).toFixed(2)
-  const shareText = `Quintessential #${puzzleName}: ${moveCount} moves in ${time}`
+  const shareText = `Quintessential #${puzzleName}: ${moveCount} moves in ${time}\n\n${boardState}`
   const onShare = () => {
     setShowMessage(true)
     setTimeout(() => setShowMessage(false), 2500)

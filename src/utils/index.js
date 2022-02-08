@@ -80,7 +80,7 @@ export const getInitialState = (param) => {
 
   puzzleNumber = typeof puzzleNumber === 'number' ? puzzleNumber : 'random'
 
-  return {
+  const state = {
     solvedWords,
     jumbledWords,
     puzzleNumber,
@@ -90,6 +90,13 @@ export const getInitialState = (param) => {
     isComplete,
     stats,
   }
+  state.boardState = wordsToEmoji(
+    jumbledWords.map((w, wi) =>
+      w.split('').map((l, li) => getLetterState(state, wi * 5 + li)),
+    ),
+  )
+
+  return state
 }
 
 export const performSwap = (words, i1, i2) => {
@@ -122,9 +129,11 @@ export const getLetterState = (
 
   // is this tile in the right word but wrong position?
   const almost = !correct && unsolvedLetters.includes(jumbledLetter)
-  const color = correct ? '#528a4c' : almost ? '#a39035' : '#3a3a3c'
+  const state = correct ? 1 : almost ? 2 : 0
+  const COLORS = ['#3a3a3c', '#528a4c', '#a39035']
+  const color = COLORS[state]
 
-  return { index, active, color, correct }
+  return { index, active, color, state }
 }
 
 export const getTranslateXY = (element) => {
@@ -157,3 +166,7 @@ export const getHumanizedTime = (s) =>
   `${Math.floor(s / 60)}:${padNum(Math.floor(s % 60))}`
 
 export const padNum = (n) => n.toString().padStart(2, '0')
+
+const EMOJI = ['⬛', '🟩', '🟨']
+export const wordsToEmoji = (words) =>
+  words.map((w) => w.map((l) => EMOJI[l.state]).join('')).join('\n')
