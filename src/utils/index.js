@@ -3,8 +3,6 @@ import shuffle from 'lodash/shuffle'
 import chunk from 'lodash/chunk'
 import { PUZZLES } from './puzzles'
 
-const GENERATE_SOLVE = false
-
 export const getJumbledWords = (solvedWords, swaps = 8) => {
   const letters = solvedWords.join('').split('')
 
@@ -40,7 +38,7 @@ export const getInitialState = (param) => {
   if (!param) {
     date = new Date()
   } else if (param !== 'random') {
-    date = new Date(new Date(param) + 1000 * 60 * 60 * 24)
+    date = new Date(+new Date(param) + 1000 * 60 * 60 * 24)
     date.setHours(0, 0, 0, 0)
   }
 
@@ -52,7 +50,7 @@ export const getInitialState = (param) => {
     puzzleNumber = dayIndex
     puzzle = PUZZLES[dayIndex]
     if (puzzle) {
-      if (GENERATE_SOLVE) {
+      if (!puzzle[1]) {
         puzzle[1] = getJumbledWords(puzzle[0].split(',')).join(',')
       }
 
