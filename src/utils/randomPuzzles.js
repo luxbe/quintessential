@@ -1,7 +1,7 @@
 export const RANDOMS = [
   ['hydro,islet,balmy,candy,copse', 'aobly,ielet,dhrcy,masyd,copns'],
-  ['feast,winch,buyer,would,giant', 'fitlt,nench,yubre,aodsu,giwwa'],
   ['bread,magma,anvil,stork,gloat', 'blegg,mmaat,tvnio,saork,drlaa'],
+  ['feast,winch,buyer,would,giant', 'fitlt,nench,yubre,aodsu,giwwa'],
   ['state,igloo,elegy,agony,voila', 'ltati,ggyvo,leeol,aiyno,ogesa'],
   ['angst,reuse,suing,glide,brave', 'eegru,sbtse,iulng,risdn,egava'],
   ['blitz,tally,lusty,dusky,tibia', 'uliaa,uztlb,lbkty,dtssi,liyyt'],

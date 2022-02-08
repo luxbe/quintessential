@@ -48,7 +48,7 @@ export const getInitialState = (param) => {
     const firstDay = new Date('2022-02-07')
     firstDay.setHours(0, 0, 0, 0)
     const day = Number(date) - Number(firstDay)
-    const dayIndex = Math.floor(day / 1000 / 60 / 60 / 24)
+    const dayIndex = Math.floor(day / 1000 / 60 / 60 / 24) - 1
     puzzleNumber = dayIndex
     puzzle = PUZZLES[dayIndex]
     if (puzzle) {
