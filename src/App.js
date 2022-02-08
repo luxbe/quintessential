@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Word } from './components/Word'
 import * as utils from './utils'
 import { HelpIcon, SettingsIcon, StatsIcon } from './components/Icons'
@@ -10,14 +10,10 @@ import { useAppState } from './utils/useAppState'
 const modalInitialState = { help: false, settings: false, win: false }
 function App() {
   const [modalState, _setModalState] = useState(modalInitialState)
-  const { bindGestures, springs, state, onNewGame } = useAppState()
   const setModalState = (c) => _setModalState((ms) => ({ ...ms, ...c }))
-
-  useEffect(() => {
-    if (state.isComplete) {
-      setTimeout(() => setModalState({ stats: true }), 2000)
-    }
-  }, [state.isComplete])
+  const { bindGestures, springs, state, onNewGame } = useAppState({
+    onWin: () => setTimeout(() => setModalState({ stats: true }), 2000),
+  })
 
   return (
     <div className="select-none" id="container">
@@ -47,10 +43,8 @@ function App() {
       <StatsModal
         onNewGame={onNewGame}
         open={modalState.stats}
-        moveCount={state.moveCount}
-        seconds={state.seconds}
-        isComplete={state.isComplete}
         onClose={() => setModalState({ stats: false })}
+        {...state}
       />
 
       <section>
@@ -66,13 +60,14 @@ function App() {
         ))}
       </section>
 
-      <p>Moves: {state.moveCount}</p>
-      <p>Time: {state.seconds}</p>
+      <p>
+        Time: {state.seconds}, Moves: {state.moveCount}
+      </p>
 
       {state.isComplete && (
         <div className="flex flex-col items-center space-y-4">
           <b>You win!</b>
-          <button onClick={onNewGame}>New game</button>
+          {/* <button onClick={onNewGame}>New game</button> */}
         </div>
       )}
     </div>

@@ -7,7 +7,7 @@ import { useStopwatch } from 'react-timer-hook'
 const zero = { x: 0, y: 0 }
 const config = { precision: 0.9, friction: 15, tension: 120, clamp: true }
 
-export const useAppState = () => {
+export const useAppState = ({ onWin }) => {
   const puzzle = new URLSearchParams(
     window.location.search.replace('?', ''),
   ).get('p')
@@ -23,14 +23,22 @@ export const useAppState = () => {
     config,
   }))
 
+  const updateStats = (fn) => {
+    setState((s) => {
+      localStorage.setItem('pentajumble-stats', JSON.stringify(fn(s.stats)))
+      return { ...s, stats: fn(s.stats) }
+    })
+  }
+
   const offset = new Date()
   offset.setSeconds(offset.getSeconds() + state.seconds)
   const {
     seconds,
     minutes,
     reset: resetStopwatch,
+    pause: stopStopwatch,
   } = useStopwatch({
-    autoStart: true,
+    autoStart: !state.isComplete,
     offsetTimestamp: offset,
   })
 
@@ -66,12 +74,27 @@ export const useAppState = () => {
   const onSwap = (index1, index2) =>
     setState(({ jumbledWords, moveCount, ...state }) => {
       const newJumbledWords = utils.performSwap(jumbledWords, index1, index2)
+      const isComplete = getIsComplete({
+        ...state,
+        jumbledWords: newJumbledWords,
+      })
+      if (isComplete) {
+        onWin()
+        updateStats((s) => ({
+          ...s,
+          winCount: s.winCount + 1,
+          moveCount: s.moveCount + moveCount,
+          secondCount: s.secondCount + state.seconds,
+        }))
+        stopStopwatch()
+      }
+
       return {
         ...state,
         activeIndex: null,
         moveCount: moveCount + 1,
         jumbledWords: newJumbledWords,
-        isComplete: getIsComplete({ ...state, jumbledWords: newJumbledWords }),
+        isComplete,
       }
     })
 

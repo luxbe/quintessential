@@ -18,6 +18,12 @@ h1 {
   font-size: 2rem;
   font-weight: 700;
 }
+h2 {
+  font-size: 1.2rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: #999;
+}
 
 p {
   @apply my-4;
@@ -65,5 +71,5 @@ div.tile.index.color.drag {
 }
 
 button {
-  @apply block bg-white text-black px-4 py-1 rounded-md;
+  @apply bg-white text-black px-4 py-1 rounded-md;
 }

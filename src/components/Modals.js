@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { CloseIcon } from './Icons'
 
 export const HelpModal = ({ open, onClose }) => (
@@ -37,34 +38,64 @@ export const SettingsModal = ({ open, onClose, onNewGame }) => (
   </Modal>
 )
 
+const Stat = ({ num, label }) => (
+  <div className="flex flex-col">
+    <span className="text-2xl font-semibold">{num}</span>
+    <span className="text-xs mt-1 text-light-gray">{label}</span>
+  </div>
+)
+
 export const StatsModal = ({
   open,
   onClose,
   isComplete,
   moveCount,
   seconds,
-}) => (
-  <Modal
-    open={open}
-    onClose={onClose}
-    title="Statistics"
-    className="flex flex-col items-center"
-  >
-    {isComplete && (
-      <div>
-        <p>Moves: {moveCount}</p>
-        <p>Time: {seconds} seconds</p>
-        <button
-          onClick={() => {
-            // TODO: copy stats
-          }}
-        >
-          Share
-        </button>
+  puzzleNumber,
+  stats,
+}) => {
+  const [showMessage, setShowMessage] = useState(false)
+  const shareText = `Pentajumble #${
+    puzzleNumber + 1
+  }: ${moveCount} Moves in ${seconds} seconds`
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      title="Statistics"
+      className="flex flex-col items-center"
+    >
+      <h2 className="mb-2">All Time</h2>
+
+      <div className="flex space-x-8 mb-6">
+        <Stat num={stats.winCount} label="Wins" />
+        <Stat num={stats.moveCount / stats.winCount} label="Avg. Moves" />
+        <Stat num={stats.secondCount / stats.winCount} label="Avg. Time" />
       </div>
-    )}
-  </Modal>
-)
+
+      {isComplete && (
+        <div>
+          <h2 className="mb-2">Last Game</h2>
+
+          <div className="flex space-x-8 mb-6">
+            <Stat num={puzzleNumber + 1} label="Puzzle #" />
+            <Stat num={moveCount} label="Moves" />
+            <Stat num={seconds} label="Seconds" />
+          </div>
+          <button
+            onClick={() => {
+              setShowMessage(true)
+              setTimeout(() => setShowMessage(false), 2500)
+              navigator.clipboard.writeText(shareText)
+            }}
+          >
+            {showMessage ? 'Copied!' : 'Share'}
+          </button>
+        </div>
+      )}
+    </Modal>
+  )
+}
 
 export const Modal = ({ open, onClose, title, children, className = '' }) => (
   <div onClick={onClose} className={`modal ${open ? 'open' : ''}`}>

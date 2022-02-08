@@ -22,9 +22,17 @@ const getJumbledWords = (solvedWords, swaps = 8) => {
 }
 
 export const getInitialState = (param) => {
+  const _stats = JSON.parse(localStorage.getItem(`pentajumble-stats`) || '{}')
   let puzzle, date
+  let puzzleNumber
   let moveCount = 0
   let seconds = 0
+  let stats = {
+    winCount: 0,
+    moveCount: 0,
+    secondCount: 0,
+    ..._stats,
+  }
 
   if (!param) {
     date = new Date()
@@ -32,11 +40,13 @@ export const getInitialState = (param) => {
     date = new Date(new Date(param) + 1000 * 60 * 60 * 24)
     date.setHours(0, 0, 0, 0)
   }
+
   if (date) {
     const firstDay = new Date('2022-02-08')
     firstDay.setHours(0, 0, 0, 0)
     const day = Number(date) - Number(firstDay)
     const dayIndex = Math.floor(day / 1000 / 60 / 60 / 24)
+    puzzleNumber = dayIndex
     puzzle = DAILIES[dayIndex]
     if (puzzle) {
       // uncomment to generate a random puzzle from static words
@@ -60,14 +70,19 @@ export const getInitialState = (param) => {
     moveCount = +moves
     seconds = +time
   }
+  const isComplete = solvedWords.every((w, i) => w === jumbledWords[i])
+
+  puzzleNumber = typeof puzzleNumber === 'number' ? puzzleNumber : 'random'
 
   return {
     solvedWords,
     jumbledWords,
+    puzzleNumber,
     moveCount,
     seconds,
     activeIndex: null,
-    isComplete: false,
+    isComplete,
+    stats,
   }
 }
 
