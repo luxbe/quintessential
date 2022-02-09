@@ -1,15 +1,18 @@
 import { useState } from 'react'
 import { Word } from './components/Word'
-import * as utils from './utils'
 import { HelpIcon, SettingsIcon, StatsIcon } from './components/Icons'
 import { HelpModal, SettingsModal, StatsModal } from './components/Modals'
+import { PuzzleEditor } from './components/PuzzleEditor'
+import { GameStats } from './components/GameStats'
+import * as utils from './utils'
 import { useAppState } from './utils/useAppState'
 
 const modalInitialState = { help: false, settings: false, win: false }
+
 function App() {
   const [modalState, _setModalState] = useState(modalInitialState)
   const setModalState = (c) => _setModalState((ms) => ({ ...ms, ...c }))
-  const { bindGestures, springs, state, onNewGame } = useAppState({
+  const { state, ...helpers } = useAppState({
     onWin: () => setTimeout(() => setModalState({ stats: true }), 2000),
   })
 
@@ -27,12 +30,9 @@ function App() {
         </div>
       </header>
 
-      <div className="flex justify-between px-4 mt-5 mb-3 max-w-sm mx-auto">
-        <span>{utils.getHumanizedTime(state.seconds)}</span>
-        <span>
-          {state.moveCount} Move{state.moveCount === 1 ? '' : 's'}
-        </span>
-      </div>
+      {!state.isEditMode && (
+        <GameStats moveCount={state.moveCount} time={state.seconds} />
+      )}
 
       <HelpModal
         open={modalState.help}
@@ -41,12 +41,12 @@ function App() {
 
       <SettingsModal
         open={modalState.settings}
-        onNewGame={onNewGame}
+        onNewGame={helpers.onNewGame}
         onClose={() => setModalState({ settings: false })}
       />
 
       <StatsModal
-        onNewGame={onNewGame}
+        onNewGame={helpers.onNewGame}
         open={modalState.stats}
         onClose={() => setModalState({ stats: false })}
         {...state}
@@ -58,12 +58,20 @@ function App() {
             key={word}
             word={word}
             index={index}
-            springs={springs}
-            bindGestures={bindGestures}
+            springs={helpers.springs}
+            bindGestures={helpers.bindGestures}
+            isEditMode={state.isEditMode}
             wordState={utils.getWordState(state, index)}
           />
         ))}
       </section>
+
+      {state.isEditMode && (
+        <PuzzleEditor
+          onJumble={helpers.onEditPuzzle}
+          jumbledWords={state.jumbledWords}
+        />
+      )}
     </div>
   )
 }

@@ -41,7 +41,7 @@ export const useAppState = ({ onWin }) => {
     reset: resetStopwatch,
     pause: stopStopwatch,
   } = useStopwatch({
-    autoStart: !state.isComplete,
+    autoStart: !state.isComplete && !state.isEditMode,
     offsetTimestamp: offset,
   })
 
@@ -52,6 +52,8 @@ export const useAppState = ({ onWin }) => {
   }, [state, api])
 
   useEffect(() => {
+    if (state.isEditMode) return
+
     localStorage.setItem(
       `quintessential-save-${state.solvedWords.join(',')}`,
       `${state.jumbledWords.join(',')}:${state.moveCount}-${state.seconds}`,
@@ -65,6 +67,11 @@ export const useAppState = ({ onWin }) => {
 
   const onNewGame = () => {
     setState(utils.getInitialState('random'))
+    resetStopwatch()
+  }
+
+  const onEditPuzzle = (words) => {
+    setState(utils.getInitialState(words.split(',')))
     resetStopwatch()
   }
 
@@ -82,7 +89,7 @@ export const useAppState = ({ onWin }) => {
         ...state,
         jumbledWords: newJumbledWords,
       })
-      if (isComplete) {
+      if (isComplete && !state.isEditMode) {
         onWin()
         updateStats((s) => ({
           ...s,
@@ -151,8 +158,7 @@ export const useAppState = ({ onWin }) => {
     if (isAnimatingRef.current || state.isComplete) return
 
     const source = event.target
-    if (!source.className.includes('tile') || source.dataset.correct === 'true')
-      return
+    if (!source.className.includes('tile')) return
 
     if (tap) return onTap(event.target)
 
@@ -246,5 +252,5 @@ export const useAppState = ({ onWin }) => {
 
   const bindGestures = useDrag(onDrag)
 
-  return { bindGestures, springs, state, onNewGame }
+  return { bindGestures, springs, state, onNewGame, onEditPuzzle }
 }

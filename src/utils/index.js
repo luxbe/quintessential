@@ -3,6 +3,9 @@ import shuffle from 'lodash/shuffle'
 import chunk from 'lodash/chunk'
 import { PUZZLES } from './puzzles'
 
+const isEditMode =
+  new URLSearchParams(window.location.search.replace('?', '')).get('e') === ''
+
 export const getJumbledWords = (solvedWords, swaps = 8) => {
   const letters = solvedWords.join('').split('')
 
@@ -24,7 +27,7 @@ export const getInitialState = (param) => {
   const _stats = JSON.parse(
     localStorage.getItem(`quintessential-stats`) || '{}',
   )
-  let puzzle, date
+  let date, solvedWords, jumbledWords
   let puzzleNumber
   let moveCount = 0
   let seconds = 0
@@ -35,34 +38,37 @@ export const getInitialState = (param) => {
     ..._stats,
   }
 
-  if (!param) {
-    date = new Date()
-  } else if (param !== 'random') {
-    date = new Date(+new Date(param) + 1000 * 60 * 60 * 24)
-    date.setHours(0, 0, 0, 0)
-  }
+  if (Array.isArray(param)) {
+    solvedWords = param
+  } else {
+    if (isEditMode) {
+      solvedWords = ['fghij', 'klmno', 'pqrst', 'uvwxy', 'abcde']
+      jumbledWords = ['abcde', 'fghij', 'klmno', 'pqrst', 'uvwxy']
+    } else if (!param) {
+      date = new Date()
+    } else if (param !== 'random') {
+      // if param is a specific days puzzle
+      date = new Date(+new Date(param) + 1000 * 60 * 60 * 24)
+      date.setHours(0, 0, 0, 0)
+    }
+    // if a date, get the puzzle for that date
+    if (date) {
+      const firstDay = new Date('2022-02-07')
+      firstDay.setHours(0, 0, 0, 0)
+      const day = Number(date) - Number(firstDay)
+      puzzleNumber = Math.floor(day / 1000 / 60 / 60 / 24) - 1
 
-  if (date) {
-    const firstDay = new Date('2022-02-07')
-    firstDay.setHours(0, 0, 0, 0)
-    const day = Number(date) - Number(firstDay)
-    const dayIndex = Math.floor(day / 1000 / 60 / 60 / 24) - 1
-    puzzleNumber = dayIndex
-    puzzle = PUZZLES[dayIndex]
-    if (puzzle) {
-      if (!puzzle[1]) {
-        puzzle[1] = getJumbledWords(puzzle[0].split(',')).join(',')
-      }
-
-      puzzle = puzzle.map((p) => p.split(','))
+      const puzzle = PUZZLES[puzzleNumber]?.map((p) => p.split(','))
+      solvedWords = puzzle[0]
+      jumbledWords = puzzle[1]
     }
   }
 
-  if (!puzzle) {
-    const solved = shuffle([...WORDS]).slice(0, 5)
-    puzzle = [solved, getJumbledWords(solved)]
-  }
-  let [solvedWords, jumbledWords] = puzzle
+  // if no puzzle yet, randomly generate one
+  solvedWords = solvedWords || shuffle([...WORDS]).slice(0, 5)
+
+  // if no jumble yet, make one
+  jumbledWords = jumbledWords || getJumbledWords(solvedWords)
 
   const save = localStorage.getItem(
     `quintessential-save-${solvedWords.join(',')}`,
@@ -87,6 +93,7 @@ export const getInitialState = (param) => {
     activeIndex: null,
     isComplete,
     stats,
+    isEditMode,
   }
   state.boardState = wordsToEmoji(
     jumbledWords.map((w, wi) =>
@@ -168,3 +175,5 @@ export const padNum = (n) => n.toString().padStart(2, '0')
 const EMOJI = ['⬛', '🟩', '🟨']
 export const wordsToEmoji = (words) =>
   words.map((w) => w.map((l) => EMOJI[l.state]).join('')).join('\n')
+
+export const validatePuzzleString = (s) => /(([a-z]){5},?){5}/.test(s)
