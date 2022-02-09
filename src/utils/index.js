@@ -27,7 +27,7 @@ export const getInitialState = (param) => {
   const _stats = JSON.parse(
     localStorage.getItem(`quintessential-stats`) || '{}',
   )
-  let date, solvedWords, jumbledWords
+  let date, solvedWords, jumbledWords, theme
   let puzzleNumber
   let moveCount = 0
   let seconds = 0
@@ -58,9 +58,10 @@ export const getInitialState = (param) => {
       const day = Number(date) - Number(firstDay)
       puzzleNumber = Math.floor(day / 1000 / 60 / 60 / 24) - 1
 
-      const puzzle = PUZZLES[puzzleNumber]?.map((p) => p.split(','))
-      solvedWords = puzzle[0]
-      jumbledWords = puzzle[1]
+      const puzzle = PUZZLES[puzzleNumber]
+      solvedWords = puzzle[0].split(',')
+      jumbledWords = puzzle[1].split(',')
+      theme = puzzle[2]
     }
   }
 
@@ -94,6 +95,7 @@ export const getInitialState = (param) => {
     isComplete,
     stats,
     isEditMode,
+    theme,
   }
   state.boardState = wordsToEmoji(
     jumbledWords.map((w, wi) =>

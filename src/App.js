@@ -31,7 +31,11 @@ function App() {
       </header>
 
       {!state.isEditMode && (
-        <GameStats moveCount={state.moveCount} time={state.seconds} />
+        <GameStats
+          moveCount={state.moveCount}
+          theme={state.theme}
+          time={state.seconds}
+        />
       )}
 
       <HelpModal
