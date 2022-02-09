@@ -60,8 +60,8 @@ section {
   transition: background-color 200ms, box-shadow 200ms;
 }
 
-div.tile.index.color.active,
-div.tile.index.color.drag {
+div.tile.active,
+div.tile.drag {
   @apply z-10;
   background-color: #999 !important;
   box-shadow: rgba(0, 0, 0, 0.23) 0px 6px 6px;
