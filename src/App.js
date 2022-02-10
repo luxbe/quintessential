@@ -10,7 +10,12 @@ import * as utils from './utils'
 import { useAppState } from './utils/useAppState'
 import useLocalStorage from './utils/useLocalStorage'
 
-const modalInitialState = { help: false, settings: false, win: false }
+const modalInitialState = {
+  help: localStorage.getItem('quint-help') !== '1',
+  settings: false,
+  win: false,
+}
+localStorage.setItem('quint-help', '1')
 
 function App() {
   const [modalState, _setModalState] = useState(modalInitialState)
