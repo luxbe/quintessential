@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useDrag } from '@use-gesture/react'
 import { useSprings } from 'react-spring'
 import * as utils from './index'
+import getInitialState from './getInitialState'
 import { useStopwatch } from 'react-timer-hook'
 
 const zero = { x: 0, y: 0 }
@@ -11,7 +12,7 @@ const TIMER_MAX = 999
 const puzzle = new URLSearchParams(window.location.search.replace('?', '')).get(
   'p',
 )
-const initialState = utils.getInitialState(puzzle)
+const initialState = getInitialState(puzzle)
 
 export const useAppState = ({ onWin }) => {
   const [state, setState] = useState(initialState)
@@ -47,7 +48,7 @@ export const useAppState = ({ onWin }) => {
 
   useEffect(() => {
     api.start((i) => ({
-      backgroundColor: utils.getLetterState(state, i).color,
+      backgroundColor: utils.getTileStateByIndex(state, i).color,
     }))
   }, [state, api])
 
@@ -66,12 +67,12 @@ export const useAppState = ({ onWin }) => {
   }, [seconds, minutes])
 
   const onNewGame = () => {
-    setState(utils.getInitialState('random'))
+    setState(getInitialState('random'))
     resetStopwatch()
   }
 
   const onEditPuzzle = (words) => {
-    setState(utils.getInitialState(words.split(',')))
+    setState(getInitialState(words.split(',')))
     resetStopwatch()
   }
 
@@ -125,8 +126,8 @@ export const useAppState = ({ onWin }) => {
     }
 
     // otherwise, swap the active tile with the one we just clicked
-    const a = utils.getTileEl(tappedEl)
-    const b = utils.getTileEl(clickedRef.current)
+    const a = utils.getTileElementData(tappedEl)
+    const b = utils.getTileElementData(clickedRef.current)
     isAnimatingRef.current = true
     onSwap(activeIndex, index)
 
@@ -163,9 +164,10 @@ export const useAppState = ({ onWin }) => {
     if (tap) return onTap(event.target)
 
     if (first) source.classList.add('drag')
-    const a = utils.getTileEl(source)
-    let b = utils.getTileEl(targetRef.current)
+    const a = utils.getTileElementData(source)
+    let b = utils.getTileElementData(targetRef.current)
     const [mX, mY] = movement
+    const { pageX, pageY } = event
 
     // const _targetRef = targetRef.current
     const onRest = () => {
@@ -178,7 +180,7 @@ export const useAppState = ({ onWin }) => {
       const speed = Math.abs(velocity[0]) + Math.abs(velocity[1])
       // if close to source original position, preview cancel
       if (speed < 0.1) {
-        const target = utils.getTileAtXY(event.pageX, event.pageY, source)
+        const target = utils.getTileElementAtXY(pageX, pageY, source)
         if (Math.abs(mX) < 40 && Math.abs(mY) < 40 && targetRef.current) {
           isTargetAnimatingRef.current = true
           targetRef.current = null
@@ -186,7 +188,7 @@ export const useAppState = ({ onWin }) => {
         } else if (target && b.index !== +target.dataset.index) {
           isTargetAnimatingRef.current = true
           targetRef.current = target
-          b = utils.getTileEl(target)
+          b = utils.getTileElementData(target)
         }
       }
 
@@ -202,7 +204,7 @@ export const useAppState = ({ onWin }) => {
           // otherwise leave it in it's initial position
           return {
             ...zero,
-            backgroundColor: utils.getLetterState(state, i).color,
+            backgroundColor: utils.getTileStateByIndex(state, i).color,
             onRest,
           }
         }
@@ -211,15 +213,15 @@ export const useAppState = ({ onWin }) => {
 
     source.classList.remove('drag')
     if (!targetRef.current) {
-      targetRef.current = utils.getTileAtXY(event.pageX, event.pageY, source)
-      b = utils.getTileEl(targetRef.current)
+      targetRef.current = utils.getTileElementAtXY(pageX, pageY, source)
+      b = utils.getTileElementData(targetRef.current)
     }
 
     // if finished dragging and no drop target, cancel
     if (typeof b.index !== 'number') {
       return api.start((i) => ({
         ...zero,
-        backgroundColor: utils.getLetterState(state, i).color,
+        backgroundColor: utils.getTileStateByIndex(state, i).color,
         onRest,
       }))
     }
