@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Word } from './components/Word'
-import { HelpIcon, SettingsIcon, StatsIcon } from './components/Icons'
 import { HelpModal, SettingsModal, StatsModal } from './components/Modals'
 import { PuzzleEditor } from './components/PuzzleEditor'
-import { GameStats } from './components/GameStats'
+import { Header } from './components/Header'
+import { Footer } from './components/Footer'
 import * as utils from './utils'
 import { useAppState } from './utils/useAppState'
 
@@ -17,26 +17,13 @@ function App() {
   })
 
   return (
-    <div className="select-none" id="container">
-      <header>
-        <div className="w-[3rem]">
-          <HelpIcon onClick={() => setModalState({ help: true })} />
-        </div>
-
-        <h1>QUINTESSENTIAL</h1>
-        <div className="flex space-x-2 w-[3rem]">
-          <StatsIcon onClick={() => setModalState({ stats: true })} />
-          <SettingsIcon onClick={() => setModalState({ settings: true })} />
-        </div>
-      </header>
-
-      {!state.isEditMode && (
-        <GameStats
-          moveCount={state.moveCount}
-          theme={state.theme}
-          time={state.seconds}
-        />
-      )}
+    <div id="container">
+      <Header
+        seconds={state.seconds}
+        showStats={!state.isEditMode}
+        moveCount={state.moveCount}
+        setModalState={setModalState}
+      />
 
       <HelpModal
         open={modalState.help}
@@ -56,7 +43,7 @@ function App() {
         {...state}
       />
 
-      <section>
+      <section className="select-none">
         {state.jumbledWords.map((word, index) => (
           <Word
             key={word}
@@ -70,10 +57,16 @@ function App() {
         ))}
       </section>
 
-      {state.isEditMode && (
+      {state.isEditMode ? (
         <PuzzleEditor
           onJumble={helpers.onEditPuzzle}
           jumbledWords={state.jumbledWords}
+        />
+      ) : (
+        <Footer
+          theme={state.theme}
+          puzzleNumber={state.puzzleNumber}
+          date={state.date}
         />
       )}
     </div>

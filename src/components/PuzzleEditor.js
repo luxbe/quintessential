@@ -20,7 +20,7 @@ export const PuzzleEditor = ({ onJumble, jumbledWords }) => {
       </button>
       <input
         value={jumbledWords.join(',')}
-        className="text-black mt-12 p-1 w-[260px] mr-2"
+        className="text-black mt-4 p-1 w-[260px] mr-2"
       />
       <button
         className="w-[80px]"

@@ -5,6 +5,7 @@ export const HelpIcon = ({ onClick, fill = '#454545' }) => (
     height="24"
     viewBox="0 0 24 24"
     onClick={onClick}
+    className="cursor-pointer"
   >
     <path
       fill={fill}
@@ -20,6 +21,7 @@ export const CloseIcon = ({ onClick, fill = '#454545' }) => (
     height="24"
     viewBox="0 0 24 24"
     onClick={onClick}
+    className="cursor-pointer"
   >
     <path
       fill={fill}
@@ -35,6 +37,7 @@ export const SettingsIcon = ({ onClick, fill = '#454545' }) => (
     height="24"
     viewBox="0 0 24 24"
     onClick={onClick}
+    className="cursor-pointer"
   >
     <path
       fill={fill}
@@ -50,6 +53,7 @@ export const StatsIcon = ({ onClick, fill = '#454545' }) => (
     height="24"
     viewBox="0 0 24 24"
     onClick={onClick}
+    className="cursor-pointer"
   >
     <path
       fill={fill}

@@ -7,7 +7,7 @@ body {
 }
 
 #container {
-  @apply select-none mx-auto text-center max-w-lg;
+  @apply mx-auto text-center max-w-lg;
 }
 
 header {
@@ -31,21 +31,25 @@ p {
 }
 
 section {
-  @apply flex flex-col justify-center items-center;
+  @apply flex flex-col justify-center items-center -mt-[0.5rem];
 }
 
 .modal {
   @apply fixed inset-0 bg-background opacity-0 pointer-events-none z-20 flex justify-center;
   transition: all 250ms;
-  transform: translate(0, 50px);
 }
 
 .modal-inner {
   @apply max-w-[100vw] w-[26rem] h-[26rem] bg-dark-gray z-30 my-24 mx-2;
+  transition: all 250ms;
+  transform: translate(0, 50px);
 }
 
 .modal.open {
   @apply opacity-100 pointer-events-auto;
+}
+
+.modal.open .modal-inner {
   transform: translate(0, 0);
 }
 

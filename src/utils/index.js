@@ -86,6 +86,7 @@ export const getInitialState = (param) => {
   puzzleNumber = typeof puzzleNumber === 'number' ? puzzleNumber : 'random'
 
   const state = {
+    date,
     solvedWords,
     jumbledWords,
     puzzleNumber,
