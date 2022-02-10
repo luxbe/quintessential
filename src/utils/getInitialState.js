@@ -8,6 +8,7 @@ const isEditMode =
 
 const getInitialState = (param) => {
   const _stats = JSON.parse(
+    // TODO: useLocalStorage hook
     localStorage.getItem(`quintessential-stats`) || '{}',
   )
   let date, solvedWords, jumbledWords, theme
@@ -54,6 +55,7 @@ const getInitialState = (param) => {
   // if no jumble yet, make one
   jumbledWords = jumbledWords || getJumbledWords(solvedWords)
 
+  // TODO: useLocalStorage hook
   const save = localStorage.getItem(
     `quintessential-save-${solvedWords.join(',')}`,
   )

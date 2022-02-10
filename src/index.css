@@ -76,5 +76,5 @@ div.tile.drag {
 }
 
 button {
-  @apply bg-white text-black px-4 py-1 rounded-md;
+  @apply bg-gray text-white px-4 py-1 rounded-md;
 }

@@ -29,6 +29,7 @@ export const useAppState = ({ onWin }) => {
 
   const updateStats = (fn) => {
     setState((s) => {
+      // TODO: useLocalStorage hook
       localStorage.setItem('quintessential-stats', JSON.stringify(fn(s.stats)))
       return { ...s, stats: fn(s.stats) }
     })
@@ -55,6 +56,7 @@ export const useAppState = ({ onWin }) => {
   useEffect(() => {
     if (state.isEditMode) return
 
+    // TODO: useLocalStorage hook
     localStorage.setItem(
       `quintessential-save-${state.solvedWords.join(',')}`,
       `${state.jumbledWords.join(',')}:${state.moveCount}-${state.seconds}`,

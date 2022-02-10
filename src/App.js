@@ -8,11 +8,14 @@ import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import * as utils from './utils'
 import { useAppState } from './utils/useAppState'
+import useLocalStorage from './utils/useLocalStorage'
 
 const modalInitialState = { help: false, settings: false, win: false }
 
 function App() {
   const [modalState, _setModalState] = useState(modalInitialState)
+  const [settings, setSettings] = useLocalStorage('quint-settings', {})
+
   const setModalState = (c) => _setModalState((ms) => ({ ...ms, ...c }))
   const { state, ...helpers } = useAppState({
     onWin: () => setTimeout(() => setModalState({ stats: true }), 2000),
@@ -21,9 +24,9 @@ function App() {
   return (
     <div id="container">
       <Header
-        seconds={state.seconds}
-        showStats={!state.isEditMode}
-        moveCount={state.moveCount}
+        theme={state.theme}
+        puzzleNumber={state.puzzleNumber}
+        date={state.date}
         setModalState={setModalState}
       />
 
@@ -35,11 +38,14 @@ function App() {
       <SettingsModal
         open={modalState.settings}
         onNewGame={helpers.onNewGame}
+        settings={settings}
+        setSettings={setSettings}
         onClose={() => setModalState({ settings: false })}
       />
 
       <StatsModal
         onNewGame={helpers.onNewGame}
+        settings={settings}
         open={modalState.stats}
         onClose={() => setModalState({ stats: false })}
         {...state}
@@ -66,9 +72,10 @@ function App() {
         />
       ) : (
         <Footer
-          theme={state.theme}
-          puzzleNumber={state.puzzleNumber}
-          date={state.date}
+          seconds={state.seconds}
+          showStats={!state.isEditMode}
+          moveCount={state.moveCount}
+          timer={settings?.timer}
         />
       )}
     </div>

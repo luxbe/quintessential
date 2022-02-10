@@ -18,6 +18,7 @@ export const StatsModal = ({
   puzzleNumber,
   stats,
   boardState,
+  settings,
 }) => {
   const [showMessage, setShowMessage] = useState(false)
   const puzzleName =
@@ -25,7 +26,11 @@ export const StatsModal = ({
   const time = getHumanizedTime(seconds)
   const avgTime = getHumanizedTime(stats.secondCount / (stats.winCount || 1))
   const avgMoves = (stats.moveCount / (stats.winCount || 1)).toFixed(2)
-  const shareText = `quintessential.fun #${puzzleName}: ${moveCount} moves in ${time}\n\n${boardState}`
+  let shareText = `quintessential.fun #${puzzleName}: ${moveCount} moves`
+
+  if (settings.timer) shareText += ` in ${time}`
+  shareText += `\n\n${boardState}`
+
   const onShare = () => {
     setShowMessage(true)
     setTimeout(() => setShowMessage(false), 2500)
@@ -43,7 +48,7 @@ export const StatsModal = ({
       <div className="flex space-x-8 mb-6">
         <Stat num={stats.winCount} label="Wins" />
         <Stat num={avgMoves} label="Avg. Moves" />
-        <Stat num={avgTime} label="Avg. Time" />
+        {settings.timer && <Stat num={avgTime} label="Avg. Time" />}
       </div>
 
       {isComplete && (
@@ -53,7 +58,7 @@ export const StatsModal = ({
           <div className="flex space-x-8 mb-6">
             <Stat num={puzzleName} label="Puzzle #" />
             <Stat num={moveCount} label="Moves" />
-            <Stat num={time} label="Time" />
+            {settings.timer && <Stat num={time} label="Time" />}
           </div>
 
           <button onClick={onShare}>{showMessage ? 'Copied!' : 'Share'}</button>
