@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply font-sans text-white overflow-hidden m-0 bg-dark-gray min-w-[350px];
+  @apply select-none font-sans text-white overflow-hidden m-0 bg-dark-gray min-w-[350px];
 }
 
 #container {
