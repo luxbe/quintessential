@@ -38,12 +38,12 @@ p {
 .modal {
   visibility: hidden;
   z-index: -1;
-  @apply fixed inset-0 bg-background opacity-0 pointer-events-none flex justify-center;
+  @apply fixed inset-0 bg-background opacity-0 pointer-events-none flex justify-center items-center;
   transition: all 250ms;
 }
 
 .modal-inner {
-  @apply max-w-[100vw] w-[26rem] h-[26rem] bg-dark-gray z-30 my-24 mx-2;
+  @apply max-w-[100vw] w-[26rem] min-h-[26rem] bg-dark-gray z-30 my-24 mx-2;
   transition: all 250ms;
   transform: translate(0, 50px);
 }

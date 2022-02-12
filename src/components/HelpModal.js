@@ -10,6 +10,9 @@ export const HelpModal = ({ open, onClose }) => (
     <p>Try to get each of the 5 horizontal words correct.</p>
     <p>Click/tap/drag two letters to swap them.</p>
 
+    <video className="mx-auto max-h-[8rem]" autoPlay loop muted playsInline>
+      <source src="/help.mp4" type="video/mp4" />
+    </video>
     <p>
       <span className="font-bold text-green">Green</span> is correct.
     </p>
