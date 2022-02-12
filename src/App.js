@@ -27,13 +27,43 @@ function App() {
   })
 
   return (
-    <div id="container">
-      <Header
-        theme={state.theme}
-        puzzleNumber={state.puzzleNumber}
-        date={state.date}
-        setModalState={setModalState}
-      />
+    <>
+      <div id="container">
+        <Header
+          theme={state.theme}
+          puzzleNumber={state.puzzleNumber}
+          date={state.date}
+          setModalState={setModalState}
+        />
+
+        <div className="-mt-[0.5rem] flex flex-col items-center justify-center">
+          {state.jumbledWords.map((word, index) => (
+            <Word
+              key={word}
+              word={word}
+              index={index}
+              springs={helpers.springs}
+              bindGestures={helpers.bindGestures}
+              isEditMode={state.isEditMode}
+              wordState={utils.getWordState(state, index)}
+            />
+          ))}
+        </div>
+
+        {state.isEditMode ? (
+          <PuzzleEditor
+            onJumble={helpers.onEditPuzzle}
+            jumbledWords={state.jumbledWords}
+          />
+        ) : (
+          <Footer
+            seconds={state.seconds}
+            showStats={!state.isEditMode}
+            moveCount={state.moveCount}
+            timer={settings?.timer}
+          />
+        )}
+      </div>
 
       <HelpModal
         open={modalState.help}
@@ -55,35 +85,7 @@ function App() {
         onClose={() => setModalState({ stats: false })}
         {...state}
       />
-
-      <section className="select-none">
-        {state.jumbledWords.map((word, index) => (
-          <Word
-            key={word}
-            word={word}
-            index={index}
-            springs={helpers.springs}
-            bindGestures={helpers.bindGestures}
-            isEditMode={state.isEditMode}
-            wordState={utils.getWordState(state, index)}
-          />
-        ))}
-      </section>
-
-      {state.isEditMode ? (
-        <PuzzleEditor
-          onJumble={helpers.onEditPuzzle}
-          jumbledWords={state.jumbledWords}
-        />
-      ) : (
-        <Footer
-          seconds={state.seconds}
-          showStats={!state.isEditMode}
-          moveCount={state.moveCount}
-          timer={settings?.timer}
-        />
-      )}
-    </div>
+    </>
   )
 }
 

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { getHumanizedTime } from '../utils'
-import { CloseIcon } from './Icons'
+import { Modal } from './Modal'
 
 const Stat = ({ num, label }) => (
   <div className="flex flex-col">
@@ -67,18 +67,3 @@ export const StatsModal = ({
     </Modal>
   )
 }
-
-export const Modal = ({ open, onClose, title, children, className = '' }) => (
-  <div onClick={onClose} className={`modal ${open ? 'open' : ''}`}>
-    <div className="modal-inner" onClick={(e) => e.stopPropagation()}>
-      <header>
-        <div style={{ width: 25 }} />
-
-        <h1>{title.toUpperCase()}</h1>
-
-        <CloseIcon onClick={onClose} />
-      </header>
-      <div className={`py-6 px-6 ${className}`}>{children}</div>
-    </div>
-  </div>
-)

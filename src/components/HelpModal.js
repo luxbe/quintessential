@@ -1,4 +1,4 @@
-import { Modal } from './StatsModal'
+import { Modal } from './Modal'
 
 export const HelpModal = ({ open, onClose }) => (
   <Modal

@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 body {
-  @apply select-none font-sans text-white overflow-hidden m-0 bg-dark-gray min-w-[350px];
+  @apply font-sans text-white overflow-hidden m-0 bg-dark-gray;
 }
 
 #container {
-  @apply mx-auto text-center max-w-lg;
+  @apply select-none mx-auto text-center max-w-lg;
 }
 
 header {
@@ -30,12 +30,10 @@ p {
   @apply my-4;
 }
 
-section {
-  @apply flex flex-col justify-center items-center -mt-[0.5rem];
-}
-
 .modal {
-  @apply fixed inset-0 bg-background opacity-0 pointer-events-none z-20 flex justify-center;
+  visibility: hidden;
+  z-index: -1;
+  @apply fixed inset-0 bg-background opacity-0 pointer-events-none flex justify-center;
   transition: all 250ms;
 }
 
@@ -46,7 +44,8 @@ section {
 }
 
 .modal.open {
-  @apply opacity-100 pointer-events-auto;
+  visibility: visible;
+  @apply opacity-100 pointer-events-auto z-20;
 }
 
 .modal.open .modal-inner {
