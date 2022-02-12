@@ -58,11 +58,11 @@ p {
 }
 
 .word {
-  @apply flex select-none mt-[0.3rem] ml-[0.3rem] text-white;
+  @apply flex select-none mt-[0.35rem] ml-[0.35rem] text-white;
 }
 
 .tile {
-  @apply mr-[0.3rem] cursor-pointer w-[18vw] h-[18vw] min-w-[1rem] min-h-[1rem] max-w-[4rem] max-h-[4rem] flex relative justify-center items-center font-bold uppercase box-border;
+  @apply mr-[0.35rem] cursor-pointer w-[18vw] h-[18vw] min-w-[1rem] min-h-[1rem] max-w-[4rem] max-h-[4rem] flex relative justify-center items-center font-bold uppercase box-border;
   touch-action: none;
   font-size: 2.3rem;
   text-decoration: none;
@@ -72,12 +72,8 @@ p {
 div.tile.active,
 div.tile.drag {
   @apply z-10;
-  background-color: #999 !important;
+  background-color: #999999 !important;
   box-shadow: rgba(0, 0, 0, 0.23) 0px 6px 6px;
-}
-
-.tile.highlight {
-  box-shadow: inset rgb(255, 255, 255) 0px 0px 2px 2px;
 }
 
 button {

@@ -49,7 +49,10 @@ export const useAppState = ({ onWin }) => {
 
   useEffect(() => {
     api.start((i) => ({
-      backgroundColor: utils.getTileStateByIndex(state, i).color,
+      backgroundColor:
+        i === +targetRef.current?.dataset?.index
+          ? '#999'
+          : utils.getTileStateByIndex(state, i).color,
     }))
   }, [state, api])
 
@@ -198,11 +201,11 @@ export const useAppState = ({ onWin }) => {
       return api.start((i) => {
         if (i === b.index && targetRef.current) {
           // if it is the current swap target, move it so it appears in the source tiles position
-          return { x: a.x - b.x, y: a.y - b.y, onRest, backgroundColor: '#888' }
+          return { x: a.x - b.x, y: a.y - b.y, onRest, backgroundColor: '#999' }
         } else if (i === draggedIndex) {
           // if it is the source tile, move it to the pointer immediately
           const immediate = (k) => k === 'x' || k === 'y'
-          return { x: mX, y: mY, backgroundColor: '#888', immediate }
+          return { x: mX, y: mY, backgroundColor: '#999', immediate }
         } else {
           // otherwise leave it in it's initial position
           return {
