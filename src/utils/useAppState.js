@@ -132,6 +132,7 @@ export const useAppState = ({ onWin }) => {
     const b = utils.getTileElementData(clickedRef.current)
     isAnimatingRef.current = true
     onSwap(activeIndex, index)
+    tappedEl.classList.remove('drag')
 
     // animate swaps
     return api.start((i) => {
