@@ -41,7 +41,7 @@ export const StatsModal = ({
       open={open}
       onClose={onClose}
       title="Statistics"
-      className="flex flex-col items-center"
+      className="flex flex-col items-center text-center"
     >
       <h2 className="mb-2">All Time</h2>
 

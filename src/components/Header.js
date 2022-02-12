@@ -18,7 +18,7 @@ export const Header = ({ theme, puzzleNumber, date, setModalState }) => {
       <div
         className={`flex ${
           theme ? 'justify-between' : 'justify-center'
-        } px-4 my-5 max-w-sm mx-auto`}
+        } px-2 my-5 max-w-sm mx-auto`}
       >
         <span>
           {puzzleNumber !== 'random' && (

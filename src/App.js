@@ -36,7 +36,7 @@ function App() {
           setModalState={setModalState}
         />
 
-        <div className="-mt-[0.5rem] flex flex-col items-center justify-center">
+        <div className="-mt-[0.5rem] flex flex-col items-center justify-center max-w-sm mx-auto">
           {state.jumbledWords.map((word, index) => (
             <Word
               key={word}
