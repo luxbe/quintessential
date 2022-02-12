@@ -15,6 +15,7 @@
     "react-scripts": "5.0.0",
     "react-spring": "^9.4.2",
     "react-timer-hook": "^3.0.5",
+    "source-map-explorer": "^2.5.2",
     "web-vitals": "^2.1.0"
   },
   "homepage": "/",
@@ -22,6 +23,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "eject": "react-scripts eject",
     "generate": "node -r esm ./src/utils/generate.js",
     "deploy": "yarn run build; echo 'quintessential.fun' > ./build/CNAME && gh-pages -d build"
