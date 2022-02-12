@@ -23,20 +23,23 @@ export const getTileStateByIndex = (
   index,
 ) => {
   const wordIndex = Math.floor(index / 5)
+  const word = jumbledWords[wordIndex].split('')
   const solvedWord = solvedWords[wordIndex].split('')
-  const jumbledWord = jumbledWords[wordIndex].split('')
+  const char = word[index % 5]
   const solvedLetter = solvedWord[index % 5]
-  const jumbledLetter = jumbledWord[index % 5]
-  const unsolvedLetters = solvedWord.filter((l, i) => jumbledWord[i] !== l)
+  const unsolvedLetters = solvedWord.filter((l, i) => word[i] !== l)
 
   // is this tile selected?
   const active = activeIndex === index
 
   // is this tile in the right word and position?
-  const correct = solvedLetter === jumbledLetter
+  const correct = solvedLetter === char
 
   // is this tile in the right word but wrong position?
-  const almost = !correct && unsolvedLetters.includes(jumbledLetter)
+  const belongsToWord = unsolvedLetters.includes(char)
+  const dupeIndex = word.filter((l, li) => l === char && li < index % 5).length
+  const solvedDupeCount = unsolvedLetters.filter((l) => l === char).length
+  const almost = !correct && belongsToWord && dupeIndex < solvedDupeCount
   const state = correct ? 1 : almost ? 2 : 0
   const color = COLORS[state]
 
