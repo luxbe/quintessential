@@ -5,18 +5,17 @@ export interface Stats {
 }
 
 export interface GameState {
-  date: Date | undefined
   solvedWords: string[]
   jumbledWords: string[]
-  puzzleNumber: string | number | undefined
   moveCount: number
   seconds: number
   activeIndex: number | null
   isComplete: boolean
-  stats: Stats
   isEditMode: boolean
-  theme: string | undefined
   boardState: string
+  date?: Date
+  puzzleNumber?: string | number
+  theme?: string
 }
 
 export interface GameSettings {

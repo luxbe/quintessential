@@ -39,8 +39,7 @@ export const StatsModal = ({
   settings,
 }: StatsModalProps) => {
   const [showMessage, setShowMessage] = useState(false)
-  const puzzleName =
-    typeof puzzleNumber === 'number' ? `${puzzleNumber + 1}` : puzzleNumber
+  const puzzleName = puzzleNumber
   const time = getHumanizedTime(seconds)
   const avgTime = getHumanizedTime(stats.secondCount / (stats.winCount || 1))
   const avgMoves = (stats.moveCount / (stats.winCount || 1)).toFixed(2)
@@ -74,7 +73,7 @@ export const StatsModal = ({
           <h2 className="mb-2">Last Game</h2>
 
           <div className="flex space-x-8 mb-6">
-            <Stat num={puzzleName} label="Puzzle #" />
+            <Stat num={puzzleName || 'random'} label="Puzzle #" />
             <Stat num={moveCount} label="Moves" />
             {settings.timer && <Stat num={time} label="Time" />}
           </div>

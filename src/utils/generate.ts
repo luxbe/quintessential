@@ -1,4 +1,4 @@
-import { WORDS } from './words'
+import { WORDS } from './randomPuzzles'
 import shuffle from 'lodash/shuffle'
 import { getJumbledWords } from '.'
 

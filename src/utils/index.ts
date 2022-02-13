@@ -1,6 +1,8 @@
 import shuffle from 'lodash/shuffle'
 import chunk from 'lodash/chunk'
+import { WORDS } from './randomPuzzles'
 import { GameState, TileElementData, TileState } from '../types'
+import { PUZZLES } from './puzzles'
 
 export const getJumbledWords = (solvedWords: string[], swaps = 8) => {
   const letters = solvedWords.join('').split('')
@@ -112,3 +114,46 @@ const padNum = (n: number) => n.toString().padStart(2, '0')
 
 const EMOJI = ['⬛', '🟩', '🟨']
 const COLORS = ['#3a3a3c', '#528a4c', '#a39035']
+
+const firstDay = new Date('2022-02-07')
+firstDay.setHours(0, 0, 0, 0)
+
+export const getRandomWords = () => shuffle([...WORDS]).slice(0, 5)
+
+export const getBoardState = (state: GameState) =>
+  wordsToEmoji(
+    state.jumbledWords.map((w, wi) =>
+      w.split('').map((l, li) => getTileStateByIndex(state, wi * 5 + li)),
+    ),
+  )
+
+export const getPuzzle = (date: Date | undefined) => {
+  if (!date) {
+    const solvedWords = getRandomWords()
+    const jumbledWords = getJumbledWords(solvedWords)
+    return { puzzleNumber: 'random', solvedWords, jumbledWords }
+  }
+
+  date.setHours(0, 0, 0, 0)
+  const day = Number(date) - Number(firstDay)
+  const puzzleNumber = Math.floor(day / 1000 / 60 / 60 / 24) - 1
+  const puzzle = PUZZLES[puzzleNumber]
+  const solvedWords = puzzle[0].split(',')
+  const jumbledWords = puzzle[1].split(',')
+  const theme = puzzle[2]
+  return { puzzleNumber, solvedWords, jumbledWords, theme }
+}
+
+export const applySave = (state: GameState) => {
+  const save = localStorage.getItem(
+    `quintessential-save-${state.solvedWords.join(',')}`,
+  )
+  if (save) {
+    const [words, other] = save.split(':')
+    const [moves, time] = other.split('-')
+    state.jumbledWords = words.split(',')
+    state.moveCount = +moves
+    state.seconds = +time
+  }
+  return state
+}

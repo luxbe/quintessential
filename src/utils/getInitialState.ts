@@ -1,107 +1,51 @@
-import { WORDS } from './words'
-import shuffle from 'lodash/shuffle'
-import { PUZZLES } from './puzzles'
-import { getJumbledWords, wordsToEmoji, getTileStateByIndex } from './index'
-import { GameState, Stats } from '../types'
+import { GameState } from '../types'
+import { applySave, getBoardState, getJumbledWords, getPuzzle } from './index'
 
-const isEditMode =
-  new URLSearchParams(window.location.search.replace('?', '')).get('e') === ''
+const ONE_DAY = 1000 * 60 * 60 * 24
 
-const getInitialState = (param: string | string[] | null) => {
-  const _stats = JSON.parse(
-    // TODO: useLocalStorage hook
-    localStorage.getItem(`quintessential-stats`) || '{}',
-  )
-  let jumbledWords: string[]
-  let solvedWords: string[]
-  let date
-  let theme
-  let puzzleNumber
-  let moveCount = 0
-  let seconds = 0
-  let stats: Stats = {
-    winCount: 0,
+const getInitialState = ({
+  dateString,
+  solvedWords,
+  isEditMode = false,
+}: {
+  isEditMode?: boolean
+  dateString?: string
+  solvedWords?: string[]
+} = {}): GameState => {
+  const date = dateString
+    ? new Date(+new Date(dateString) + ONE_DAY)
+    : undefined
+
+  const puzzle = getPuzzle(date)
+
+  let state: GameState = {
     moveCount: 0,
-    secondCount: 0,
-    ..._stats,
-  }
-
-  if (Array.isArray(param)) {
-    solvedWords = param
-  } else {
-    if (isEditMode) {
-      solvedWords = ['fghij', 'klmno', 'pqrst', 'uvwxy', 'abcde']
-      jumbledWords = ['abcde', 'fghij', 'klmno', 'pqrst', 'uvwxy']
-    } else if (!param) {
-      date = new Date()
-    } else if (param !== 'random') {
-      // if param is a specific days puzzle`
-      date = new Date(+new Date(param) + 1000 * 60 * 60 * 24)
-      date.setHours(0, 0, 0, 0)
-    }
-    // if a date, get the puzzle for that date
-    if (date) {
-      const firstDay = new Date('2022-02-07')
-      firstDay.setHours(0, 0, 0, 0)
-      const day = Number(date) - Number(firstDay)
-      puzzleNumber = Math.floor(day / 1000 / 60 / 60 / 24) - 1
-
-      const puzzle = PUZZLES[puzzleNumber]
-      solvedWords = puzzle[0].split(',')
-      jumbledWords = puzzle[1].split(',')
-      theme = puzzle[2]
-    }
-  }
-
-  // if no puzzle yet, randomly generate one
-  // @ts-ignore
-  solvedWords = solvedWords || shuffle([...WORDS]).slice(0, 5)
-
-  // if no jumble yet, make one
-  // @ts-ignore
-  jumbledWords = jumbledWords || getJumbledWords(solvedWords)
-
-  // TODO: useLocalStorage hook
-  const save = localStorage.getItem(
-    `quintessential-save-${solvedWords.join(',')}`,
-  )
-  if (save) {
-    const [words, other] = save.split(':')
-    const [moves, time] = other.split('-')
-    jumbledWords = words.split(',')
-    moveCount = +moves
-    seconds = +time
-  }
-  const isComplete = solvedWords.every((w, i) => w === jumbledWords[i])
-
-  puzzleNumber = typeof puzzleNumber === 'number' ? puzzleNumber : 'random'
-  const boardState = wordsToEmoji(
-    jumbledWords.map((w, wi) =>
-      w
-        .split('')
-        .map((l, li) =>
-          getTileStateByIndex(
-            { jumbledWords, solvedWords, activeIndex: null },
-            wi * 5 + li,
-          ),
-        ),
-    ),
-  )
-
-  const state: GameState = {
-    date,
-    solvedWords,
-    jumbledWords,
-    puzzleNumber,
-    moveCount,
-    seconds,
+    seconds: 0,
     activeIndex: null,
-    isComplete,
-    stats,
+    isComplete: false,
+    boardState: '',
+    date,
     isEditMode,
-    theme,
-    boardState,
+    ...puzzle,
   }
+
+  if (solvedWords) {
+    state.solvedWords = solvedWords
+    state.jumbledWords = getJumbledWords(solvedWords)
+  }
+
+  if (isEditMode) {
+    state.solvedWords = ['fghij', 'klmno', 'pqrst', 'uvwxy', 'abcde']
+    state.jumbledWords = ['abcde', 'fghij', 'klmno', 'pqrst', 'uvwxy']
+  }
+
+  state.boardState = getBoardState(state)
+
+  state = applySave(state)
+
+  state.isComplete = state.solvedWords.every(
+    (w, i) => w === state.jumbledWords[i],
+  )
 
   return state
 }

@@ -6,15 +6,24 @@ import * as utils from './index'
 import getInitialState from './getInitialState'
 import { useStopwatch } from 'react-timer-hook'
 import { Stats } from '../types'
+import useLocalStorage from './useLocalStorage'
 
 const zero = { x: 0, y: 0 }
 const config = { precision: 0.9, friction: 15, tension: 120, clamp: true }
 const TIMER_MAX = 999
 
-const puzzle = new URLSearchParams(window.location.search.replace('?', '')).get(
-  'p',
-)
-const initialState = getInitialState(puzzle)
+const ONE_DAY = 1000 * 60 * 60 * 24
+const params = new URLSearchParams(window.location.search.replace('?', ''))
+const isEditMode = params.get('e') === ''
+const puzzleParam = params.get('p')
+const todayDateString = new Date(Date.now() - ONE_DAY).toISOString()
+const dateString = puzzleParam || todayDateString
+const initialState = getInitialState({ dateString, isEditMode })
+const initialStats: Stats = {
+  winCount: 0,
+  moveCount: 0,
+  secondCount: 0,
+}
 
 export const useAppState = ({ onWin }: { onWin: () => void }) => {
   const [state, setState] = useState(initialState)
@@ -22,20 +31,17 @@ export const useAppState = ({ onWin }: { onWin: () => void }) => {
   const clickedRef = useRef<HTMLElement | null>(null)
   const isAnimatingRef = useRef<boolean>(false)
   const isTargetAnimatingRef = useRef<boolean>(false)
+  const [stats, setStats] = useLocalStorage(
+    'quintessential-stats',
+    initialStats,
+  )
+
   const [springs, springAPI] = useSprings(25, () => ({
     x: 0,
     y: 0,
     backgroundColor: '#121212',
     config,
   }))
-
-  const updateStats = (fn: (obj: Stats) => Stats) => {
-    setState((s) => {
-      // TODO: useLocalStorage hook
-      localStorage.setItem('quintessential-stats', JSON.stringify(fn(s.stats)))
-      return { ...s, stats: fn(s.stats) }
-    })
-  }
 
   const offset = new Date()
   offset.setSeconds(offset.getSeconds() + state.seconds)
@@ -74,12 +80,12 @@ export const useAppState = ({ onWin }: { onWin: () => void }) => {
   }, [seconds, minutes])
 
   const onNewGame = () => {
-    setState(getInitialState('random'))
+    setState(getInitialState({ isEditMode }))
     resetStopwatch()
   }
 
   const onEditPuzzle = (words: string) => {
-    setState(getInitialState(words.split(',')))
+    setState(getInitialState({ solvedWords: words.split(','), isEditMode }))
     resetStopwatch()
   }
 
@@ -106,7 +112,7 @@ export const useAppState = ({ onWin }: { onWin: () => void }) => {
       })
       if (isComplete && !state.isEditMode) {
         onWin()
-        updateStats((s) => ({
+        setStats((s: Stats) => ({
           ...s,
           winCount: s.winCount + 1,
           moveCount: s.moveCount + moveCount + 1,
@@ -245,7 +251,7 @@ export const useAppState = ({ onWin }: { onWin: () => void }) => {
     }
 
     // if finished dragging and no drop target, cancel
-    if (typeof b.index !== 'number') {
+    if (b.index === -1) {
       return springAPI.start((i) => ({
         ...zero,
         backgroundColor: utils.getTileStateByIndex(state, i).color,
@@ -281,5 +287,5 @@ export const useAppState = ({ onWin }: { onWin: () => void }) => {
 
   const bindGestures = useDrag(onDrag)
 
-  return { bindGestures, springs, state, onNewGame, onEditPuzzle }
+  return { state, bindGestures, springs, onNewGame, onEditPuzzle, stats }
 }

@@ -86,7 +86,7 @@ const App = () => {
         moveCount={state.moveCount}
         seconds={state.seconds}
         puzzleNumber={state.puzzleNumber}
-        stats={state.stats}
+        stats={helpers.stats}
         boardState={state.boardState}
       />
     </>

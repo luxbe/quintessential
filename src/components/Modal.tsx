@@ -3,7 +3,7 @@ import { CloseIcon } from './Icons'
 
 interface ModalProps {
   open: boolean
-  onClose: () => {}
+  onClose: () => void
   title: string
   className: string
   children: ReactElement | ReactElement[]
