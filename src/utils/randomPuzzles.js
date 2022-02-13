@@ -4,7 +4,7 @@ export const RANDOMS = [
   ['feast,winch,buyer,would,giant', 'fitlt,nench,yubre,aodsu,giwwa'],
   ['state,igloo,elegy,agony,voila', 'ltati,ggyvo,leeol,aiyno,ogesa'],
   ['angst,reuse,suing,glide,brave', 'eegru,sbtse,iulng,risdn,egava'],
-  ['blitz,tally,lusty,dusky,tibia', 'uliaa,uztlb,lbkty,dtssi,liyyt'],
+  ['heart,candy,flirt,cupid,adore', 'eedrp,ctnra,fhddt,auair,liocy', 'love'],
   ['brand,fella,epoxy,gayly,mucky', 'xragu,eylla,fopbc,naely,mdyyk'],
   ['vital,rotor,madam,bayou,knead', 'ontal,tdror,amokm,bayva,aidue'],
   ['sooth,screw,nymph,video,frown', 'dvrtn,sihew,fompr,ocseo,noywh'],
