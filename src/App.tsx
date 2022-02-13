@@ -8,7 +8,6 @@ import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import * as utils from './utils'
 import { useAppState } from './utils/useAppState'
-import useLocalStorage from './utils/useLocalStorage'
 
 const modalInitialState = {
   help: localStorage.getItem('quint-help') !== '1',
@@ -19,13 +18,11 @@ localStorage.setItem('quint-help', '1')
 
 const App = () => {
   const [modalState, _setModalState] = useState(modalInitialState)
-  const [settings, setSettings] = useLocalStorage('quint-settings', {})
-
   const setModalState = (c: Record<string, unknown>) =>
     _setModalState((ms) => ({ ...ms, ...c }))
-  const { state, ...helpers } = useAppState({
-    onWin: () => setTimeout(() => setModalState({ stats: true }), 2000),
-  })
+
+  const onWin = () => setTimeout(() => setModalState({ stats: true }), 2000)
+  const { state, ...helpers } = useAppState({ onWin })
 
   return (
     <>
@@ -60,7 +57,7 @@ const App = () => {
           <Footer
             seconds={state.seconds}
             moveCount={state.moveCount}
-            timer={settings?.timer}
+            timer={helpers.settings?.timer}
           />
         )}
       </div>
@@ -72,22 +69,22 @@ const App = () => {
 
       <SettingsModal
         open={modalState.settings}
-        onNewGame={helpers.onNewGame}
-        settings={settings}
-        setSettings={setSettings}
+        onRandomGame={helpers.onRandomGame}
+        settings={helpers.settings}
+        setSettings={helpers.setSettings}
         onClose={() => setModalState({ settings: false })}
       />
 
       <StatsModal
-        settings={settings}
         open={modalState.stats}
-        onClose={() => setModalState({ stats: false })}
         isComplete={state.isComplete}
+        puzzleNumber={state.puzzleNumber}
         moveCount={state.moveCount}
         seconds={state.seconds}
-        puzzleNumber={state.puzzleNumber}
-        stats={helpers.stats}
         boardState={state.boardState}
+        stats={helpers.stats}
+        settings={helpers.settings}
+        onClose={() => setModalState({ stats: false })}
       />
     </>
   )

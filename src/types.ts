@@ -1,3 +1,5 @@
+import { SpringValue } from 'react-spring'
+
 export interface Stats {
   winCount: number
   moveCount: number
@@ -35,4 +37,10 @@ export interface TileElementData {
   y: number
   color: string
   index: number
+}
+
+export interface SpringState {
+  x: SpringValue<number>
+  y: SpringValue<number>
+  backgroundColor: SpringValue<string>
 }

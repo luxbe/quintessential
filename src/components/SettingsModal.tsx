@@ -7,14 +7,14 @@ interface SettingsModalProps {
   open: boolean
   setSettings: (v: any) => {}
   onClose: () => void
-  onNewGame: () => void
+  onRandomGame: () => void
 }
 export const SettingsModal = ({
   settings,
   setSettings,
   open,
   onClose,
-  onNewGame,
+  onRandomGame,
 }: SettingsModalProps) => (
   <Modal
     open={open}
@@ -32,7 +32,7 @@ export const SettingsModal = ({
     <button
       onClick={() => {
         onClose()
-        onNewGame()
+        onRandomGame()
       }}
     >
       Random game

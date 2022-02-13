@@ -157,3 +157,14 @@ export const applySave = (state: GameState) => {
   }
   return state
 }
+
+export const getIsComplete = ({
+  solvedWords,
+  jumbledWords,
+}: {
+  solvedWords: string[]
+  jumbledWords: string[]
+}) =>
+  jumbledWords.every((w, wi) =>
+    w.split('').every((c, ci) => c === solvedWords[wi][ci]),
+  )

@@ -5,11 +5,12 @@ import { useSprings } from 'react-spring'
 import * as utils from './index'
 import getInitialState from './getInitialState'
 import { useStopwatch } from 'react-timer-hook'
-import { Stats } from '../types'
+import { GameSettings, GameState, SpringState, Stats } from '../types'
 import useLocalStorage from './useLocalStorage'
 
 const zero = { x: 0, y: 0 }
 const config = { precision: 0.9, friction: 15, tension: 120, clamp: true }
+const springInitialState = { x: 0, y: 0, backgroundColor: '#121212', config }
 const TIMER_MAX = 999
 
 const ONE_DAY = 1000 * 60 * 60 * 24
@@ -25,23 +26,30 @@ const initialStats: Stats = {
   secondCount: 0,
 }
 
-export const useAppState = ({ onWin }: { onWin: () => void }) => {
+interface AppState {
+  state: GameState
+  stats: Stats
+  settings: GameSettings
+  onRandomGame: () => void
+  onEditPuzzle: (words: string) => void
+  setStats: (v: any) => {}
+  setSettings: (v: any) => {}
+  bindGestures: (i: number) => {}
+  springs: SpringState[]
+}
+
+export const useAppState = ({ onWin }: { onWin: () => void }): AppState => {
   const [state, setState] = useState(initialState)
   const targetRef = useRef<HTMLElement | null>(null)
   const clickedRef = useRef<HTMLElement | null>(null)
   const isAnimatingRef = useRef<boolean>(false)
   const isTargetAnimatingRef = useRef<boolean>(false)
+  const [springs, springAPI] = useSprings(25, () => springInitialState)
+  const [settings, setSettings] = useLocalStorage('quint-settings', {})
   const [stats, setStats] = useLocalStorage(
     'quintessential-stats',
     initialStats,
   )
-
-  const [springs, springAPI] = useSprings(25, () => ({
-    x: 0,
-    y: 0,
-    backgroundColor: '#121212',
-    config,
-  }))
 
   const offset = new Date()
   offset.setSeconds(offset.getSeconds() + state.seconds)
@@ -55,35 +63,40 @@ export const useAppState = ({ onWin }: { onWin: () => void }) => {
     offsetTimestamp: offset,
   })
 
+  // reset tile colors on state change
   useEffect(() => {
     springAPI.start((i) => ({
       backgroundColor:
+        // handle case where target needs to stay highlighted while dragging
         i === +(targetRef.current?.dataset?.index ?? '-1')
           ? '#999'
           : utils.getTileStateByIndex(state, i).color,
     }))
   }, [state, springAPI])
 
+  // autosave game when state changes
   useEffect(() => {
     if (state.isEditMode) return
 
-    // TODO: useLocalStorage hook
     localStorage.setItem(
       `quintessential-save-${state.solvedWords.join(',')}`,
       `${state.jumbledWords.join(',')}:${state.moveCount}-${state.seconds}`,
     )
   }, [state])
 
+  // update time state
   useEffect(() => {
     if (seconds + minutes * 60 < TIMER_MAX)
       setState((s) => ({ ...s, seconds: seconds + minutes * 60 }))
   }, [seconds, minutes])
 
-  const onNewGame = () => {
+  // start a random game
+  const onRandomGame = () => {
     setState(getInitialState({ isEditMode }))
     resetStopwatch()
   }
 
+  // enter a new puzzle string in edit mode
   const onEditPuzzle = (words: string) => {
     setState(getInitialState({ solvedWords: words.split(','), isEditMode }))
     resetStopwatch()
@@ -92,40 +105,27 @@ export const useAppState = ({ onWin }: { onWin: () => void }) => {
   const onSelect = (index: number | null) =>
     setState((s) => ({ ...s, activeIndex: index }))
 
-  const getIsComplete = ({
-    solvedWords,
-    jumbledWords,
-  }: {
-    solvedWords: string[]
-    jumbledWords: string[]
-  }) =>
-    jumbledWords.every((w, wi) =>
-      w.split('').every((c, ci) => c === solvedWords[wi][ci]),
-    )
-
   const onSwap = (index1: number, index2: number) =>
-    setState(({ jumbledWords, moveCount, ...state }) => {
-      const newJumbledWords = utils.performSwap(jumbledWords, index1, index2)
-      const isComplete = getIsComplete({
-        solvedWords: state.solvedWords,
-        jumbledWords: newJumbledWords,
-      })
+    setState(({ solvedWords, ...state }) => {
+      const jumbledWords = utils.performSwap(state.jumbledWords, index1, index2)
+      const isComplete = utils.getIsComplete({ solvedWords, jumbledWords })
       if (isComplete && !state.isEditMode) {
         onWin()
+        stopStopwatch()
         setStats((s: Stats) => ({
           ...s,
           winCount: s.winCount + 1,
-          moveCount: s.moveCount + moveCount + 1,
+          moveCount: s.moveCount + state.moveCount + 1,
           secondCount: s.secondCount + state.seconds,
         }))
-        stopStopwatch()
       }
 
       return {
         ...state,
         activeIndex: null,
-        moveCount: moveCount + 1,
-        jumbledWords: newJumbledWords,
+        moveCount: state.moveCount + 1,
+        solvedWords,
+        jumbledWords,
         isComplete,
       }
     })
@@ -287,5 +287,15 @@ export const useAppState = ({ onWin }: { onWin: () => void }) => {
 
   const bindGestures = useDrag(onDrag)
 
-  return { state, bindGestures, springs, onNewGame, onEditPuzzle, stats }
+  return {
+    state,
+    bindGestures,
+    springs,
+    onRandomGame,
+    onEditPuzzle,
+    stats,
+    setStats,
+    settings,
+    setSettings,
+  }
 }

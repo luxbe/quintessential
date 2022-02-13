@@ -1,12 +1,6 @@
 import classNames from 'classnames'
-import { animated, SpringValue } from 'react-spring'
-import { TileState } from '../types'
-
-interface SpringState {
-  x: SpringValue<number>
-  y: SpringValue<number>
-  backgroundColor: SpringValue<string>
-}
+import { animated } from 'react-spring'
+import { SpringState, TileState } from '../types'
 
 interface WordProps {
   word: string
