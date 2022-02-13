@@ -31,9 +31,7 @@ const getInitialState = ({
   if (solvedWords) {
     state.solvedWords = solvedWords
     state.jumbledWords = getJumbledWords(solvedWords)
-  }
-
-  if (isEditMode) {
+  } else if (isEditMode) {
     state.solvedWords = ['fghij', 'klmno', 'pqrst', 'uvwxy', 'abcde']
     state.jumbledWords = ['abcde', 'fghij', 'klmno', 'pqrst', 'uvwxy']
   }
