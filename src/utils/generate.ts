@@ -1,4 +1,4 @@
-import { WORDS } from '../constants/randomPuzzles'
+import { WORDS } from '../constants/puzzles'
 import shuffle from 'lodash/shuffle'
 import { getJumbledWords } from '.'
 
@@ -12,3 +12,17 @@ while (words.length >= 5) {
 }
 
 console.log(...puzzles)
+
+// code used to assign randoms to weekdays and uniques to weekends
+// let dailies = [...DAILIES]
+// export const PUZZLES = [...RANDOMS]
+// let i = 5
+// while (dailies.length > 1) {
+//   const one = dailies.shift()
+//   const two = dailies.shift()
+//   if (one && two) {
+//     PUZZLES.splice(i, 0, one)
+//     PUZZLES.splice(i + 1, 0, two)
+//   }
+//   i += 7
+// }

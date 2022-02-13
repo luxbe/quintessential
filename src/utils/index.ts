@@ -1,7 +1,7 @@
 import shuffle from 'lodash/shuffle'
 import chunk from 'lodash/chunk'
 import { GameState, TileElementData, TileState } from '../types'
-import { WORDS } from '../constants/randomPuzzles'
+import { WORDS } from '../constants/puzzles'
 import { PUZZLES } from '../constants/puzzles'
 import { ONE_DAY, SAVE_KEY } from '../constants'
 
