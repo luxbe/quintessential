@@ -4,6 +4,25 @@ import { GameState, TileElementData, TileState } from '../types'
 import { WORDS } from '../constants/randomPuzzles'
 import { PUZZLES } from '../constants/puzzles'
 
+const getBackgroundColor = (element: HTMLElement) =>
+  element
+    ? window
+        .getComputedStyle(element, null)
+        .getPropertyValue('background-color')
+    : 'transparent'
+
+const padNum = (n: number) => n.toString().padStart(2, '0')
+
+const EMOJI = ['⬛', '🟩', '🟨']
+const COLORS = ['#3a3a3c', '#528a4c', '#a39035']
+
+const wordsToEmoji = (words: TileState[][]) =>
+  words
+    .map((w: TileState[]) => w.map((l) => EMOJI[l.state]).join(''))
+    .join('\n')
+
+const firstDay = new Date('2022-02-07')
+firstDay.setHours(0, 0, 0, 0)
 
 export const getJumbledWords = (solvedWords: string[], swaps = 8) => {
   const letters = solvedWords.join('').split('')
@@ -97,27 +116,7 @@ export const getTileElementAtXY = (
 export const getHumanizedTime = (s: number) =>
   `${Math.floor(s / 60)}:${padNum(Math.floor(s % 60))}`
 
-export const wordsToEmoji = (words: TileState[][]) =>
-  words
-    .map((w: TileState[]) => w.map((l) => EMOJI[l.state]).join(''))
-    .join('\n')
-
 export const validatePuzzleString = (s: string) => /(([a-z]){5},?){5}/.test(s)
-
-const getBackgroundColor = (element: HTMLElement) =>
-  element
-    ? window
-        .getComputedStyle(element, null)
-        .getPropertyValue('background-color')
-    : 'transparent'
-
-const padNum = (n: number) => n.toString().padStart(2, '0')
-
-const EMOJI = ['⬛', '🟩', '🟨']
-const COLORS = ['#3a3a3c', '#528a4c', '#a39035']
-
-const firstDay = new Date('2022-02-07')
-firstDay.setHours(0, 0, 0, 0)
 
 export const getRandomWords = () => shuffle([...WORDS]).slice(0, 5)
 
