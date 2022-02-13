@@ -7,7 +7,7 @@ export const PUZZLES = [
   ['angst,reuse,suing,glide,brave', 'eegru,sbtse,iulng,risdn,egava'],
   ['pizza,bacon,sauce,curds,crust', 'sucsc,uaudn,pabae,zcros,crizt', 'food'],
   ['herbs,thyme,onion,basil,chard', 'hnobh,ssyce,oeirr,bdtil,mahna', 'food'],
-  ['', '', 'love'], // TODO: valentines day
+  ['heart,candy,flirt,cupid,adore', 'reird,cpnrd,feadt,auaiy,ctohl', 'valentine'],
   ['swine,rhino,tapir,fitch,zebra', 'pwhnr,riiaf,easre,otich,ztbin', 'animals'],
   ['koala,steer,horse,lemur,tiger', 'eomrl,htkei,surse,agaol,treer', 'animals'],
   ['china,india,japan,napal,yemen', 'cjaae,iadpn,hapnn,aniil,namey', 'countries'],
