@@ -1,13 +1,31 @@
 import { useState } from 'react'
+import { GameSettings, Stats } from '../types'
 import { getHumanizedTime } from '../utils'
 import { Modal } from './Modal'
 
-const Stat = ({ num, label }) => (
+interface StatProps {
+  num: number | string
+  label: string
+}
+
+const Stat = ({ num, label }: StatProps) => (
   <div className="flex flex-col">
     <span className="text-2xl font-semibold">{num}</span>
     <span className="text-xs mt-1 text-light-gray">{label}</span>
   </div>
 )
+
+interface StatsModalProps {
+  open: boolean
+  onClose: () => void
+  isComplete: boolean
+  moveCount: number
+  seconds: number
+  puzzleNumber: number | string | undefined
+  boardState: string
+  stats: Stats
+  settings: GameSettings
+}
 
 export const StatsModal = ({
   open,
@@ -19,7 +37,7 @@ export const StatsModal = ({
   stats,
   boardState,
   settings,
-}) => {
+}: StatsModalProps) => {
   const [showMessage, setShowMessage] = useState(false)
   const puzzleName =
     typeof puzzleNumber === 'number' ? `${puzzleNumber + 1}` : puzzleNumber
@@ -51,7 +69,7 @@ export const StatsModal = ({
         {settings.timer && <Stat num={avgTime} label="Avg. Time" />}
       </div>
 
-      {isComplete && (
+      {isComplete ? (
         <div>
           <h2 className="mb-2">Last Game</h2>
 
@@ -63,6 +81,8 @@ export const StatsModal = ({
 
           <button onClick={onShare}>{showMessage ? 'Copied!' : 'Share'}</button>
         </div>
+      ) : (
+        <></>
       )}
     </Modal>
   )

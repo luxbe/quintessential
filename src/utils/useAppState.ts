@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
+import { Handler } from '@use-gesture/react'
 import { useDrag } from '@use-gesture/react'
 import { useSprings } from 'react-spring'
 import * as utils from './index'
 import getInitialState from './getInitialState'
 import { useStopwatch } from 'react-timer-hook'
+import { Stats } from '../types'
 
 const zero = { x: 0, y: 0 }
 const config = { precision: 0.9, friction: 15, tension: 120, clamp: true }
@@ -14,20 +16,20 @@ const puzzle = new URLSearchParams(window.location.search.replace('?', '')).get(
 )
 const initialState = getInitialState(puzzle)
 
-export const useAppState = ({ onWin }) => {
+export const useAppState = ({ onWin }: { onWin: () => void }) => {
   const [state, setState] = useState(initialState)
-  const targetRef = useRef()
-  const clickedRef = useRef()
-  const isAnimatingRef = useRef()
-  const isTargetAnimatingRef = useRef()
-  const [springs, api] = useSprings(25, () => ({
+  const targetRef = useRef<HTMLElement | null>(null)
+  const clickedRef = useRef<HTMLElement | null>(null)
+  const isAnimatingRef = useRef<boolean>(false)
+  const isTargetAnimatingRef = useRef<boolean>(false)
+  const [springs, springAPI] = useSprings(25, () => ({
     x: 0,
     y: 0,
     backgroundColor: '#121212',
     config,
   }))
 
-  const updateStats = (fn) => {
+  const updateStats = (fn: (obj: Stats) => Stats) => {
     setState((s) => {
       // TODO: useLocalStorage hook
       localStorage.setItem('quintessential-stats', JSON.stringify(fn(s.stats)))
@@ -48,13 +50,13 @@ export const useAppState = ({ onWin }) => {
   })
 
   useEffect(() => {
-    api.start((i) => ({
+    springAPI.start((i) => ({
       backgroundColor:
-        i === +targetRef.current?.dataset?.index
+        i === +(targetRef.current?.dataset?.index ?? '-1')
           ? '#999'
           : utils.getTileStateByIndex(state, i).color,
     }))
-  }, [state, api])
+  }, [state, springAPI])
 
   useEffect(() => {
     if (state.isEditMode) return
@@ -76,23 +78,30 @@ export const useAppState = ({ onWin }) => {
     resetStopwatch()
   }
 
-  const onEditPuzzle = (words) => {
+  const onEditPuzzle = (words: string) => {
     setState(getInitialState(words.split(',')))
     resetStopwatch()
   }
 
-  const onSelect = (index) => setState((s) => ({ ...s, activeIndex: index }))
+  const onSelect = (index: number | null) =>
+    setState((s) => ({ ...s, activeIndex: index }))
 
-  const getIsComplete = ({ solvedWords, jumbledWords }) =>
+  const getIsComplete = ({
+    solvedWords,
+    jumbledWords,
+  }: {
+    solvedWords: string[]
+    jumbledWords: string[]
+  }) =>
     jumbledWords.every((w, wi) =>
       w.split('').every((c, ci) => c === solvedWords[wi][ci]),
     )
 
-  const onSwap = (index1, index2) =>
+  const onSwap = (index1: number, index2: number) =>
     setState(({ jumbledWords, moveCount, ...state }) => {
       const newJumbledWords = utils.performSwap(jumbledWords, index1, index2)
       const isComplete = getIsComplete({
-        ...state,
+        solvedWords: state.solvedWords,
         jumbledWords: newJumbledWords,
       })
       if (isComplete && !state.isEditMode) {
@@ -115,8 +124,10 @@ export const useAppState = ({ onWin }) => {
       }
     })
 
-  const onTap = (tappedEl) => {
-    const index = +tappedEl.dataset.index
+  const onTap = (tappedEl: HTMLElement) => {
+    if (!tappedEl) return
+
+    const index = +(tappedEl.dataset.index ?? '-1')
     const activeIndex = state.activeIndex
 
     // if no tile is selected, select the clicked tile
@@ -138,7 +149,7 @@ export const useAppState = ({ onWin }) => {
     tappedEl.classList.remove('drag')
 
     // animate swaps
-    return api.start((i) => {
+    return springAPI.start((i) => {
       if (i === activeIndex) {
         return {
           from: { x: a.x - b.x, y: a.y - b.y, backgroundColor: a.color },
@@ -151,7 +162,7 @@ export const useAppState = ({ onWin }) => {
           onRest: () => {
             clickedRef.current = null
             isAnimatingRef.current = false
-            api.set(zero)
+            springAPI.set(zero)
           },
         }
       } else {
@@ -160,20 +171,30 @@ export const useAppState = ({ onWin }) => {
     })
   }
 
-  const onDrag = ({ args, first, event, velocity, active, movement, tap }) => {
+  const onDrag: Handler<'drag'> = ({
+    args,
+    first,
+    event,
+    velocity,
+    active,
+    movement,
+    tap,
+  }) => {
     const [draggedIndex] = args
     if (isAnimatingRef.current || state.isComplete) return
 
-    const source = event.target
+    const source = event.target as HTMLElement
+    if (!source) return
+
     if (!source.className.includes('tile')) return
 
-    if (tap) return onTap(event.target)
+    if (tap) return onTap(source)
 
     if (first) source.classList.add('drag')
     const a = utils.getTileElementData(source)
     let b = utils.getTileElementData(targetRef.current)
     const [mX, mY] = movement
-    const { pageX, pageY } = event
+    const { pageX, pageY } = event as PointerEvent
 
     // const _targetRef = targetRef.current
     const onRest = () => {
@@ -191,20 +212,20 @@ export const useAppState = ({ onWin }) => {
           isTargetAnimatingRef.current = true
           targetRef.current = null
           // if we've got a new target, switch if we aren't currently animating a switch
-        } else if (target && b.index !== +target.dataset.index) {
+        } else if (target && b.index !== +(target.dataset.index ?? '-1')) {
           isTargetAnimatingRef.current = true
           targetRef.current = target
           b = utils.getTileElementData(target)
         }
       }
 
-      return api.start((i) => {
+      return springAPI.start((i) => {
         if (i === b.index && targetRef.current) {
           // if it is the current swap target, move it so it appears in the source tiles position
           return { x: a.x - b.x, y: a.y - b.y, onRest, backgroundColor: '#999' }
         } else if (i === draggedIndex) {
           // if it is the source tile, move it to the pointer immediately
-          const immediate = (k) => k === 'x' || k === 'y'
+          const immediate = (k: string) => k === 'x' || k === 'y'
           return { x: mX, y: mY, backgroundColor: '#999', immediate }
         } else {
           // otherwise leave it in it's initial position
@@ -225,7 +246,7 @@ export const useAppState = ({ onWin }) => {
 
     // if finished dragging and no drop target, cancel
     if (typeof b.index !== 'number') {
-      return api.start((i) => ({
+      return springAPI.start((i) => ({
         ...zero,
         backgroundColor: utils.getTileStateByIndex(state, i).color,
         onRest,
@@ -236,11 +257,11 @@ export const useAppState = ({ onWin }) => {
     onSwap(a.index, b.index)
     const diff = { x: a.x - b.x, y: a.y - b.y }
     const o = utils.getTranslateXY(targetRef.current)
-    targetRef.current = undefined
+    targetRef.current = null
 
     // and animate back into place
     isAnimatingRef.current = true
-    api.start((index) => {
+    springAPI.start((index) => {
       if (index === b.index) {
         return {
           from: { x: mX + diff.x, y: mY + diff.y, backgroundColor: a.color },

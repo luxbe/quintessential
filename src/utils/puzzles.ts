@@ -37,7 +37,11 @@ let dailies = [...DAILIES]
 export const PUZZLES = [...RANDOMS]
 let i = 5
 while (dailies.length > 1) {
-  PUZZLES.splice(i, 0, dailies.shift())
-  PUZZLES.splice(i + 1, 0, dailies.shift())
+  const one = dailies.shift()
+  const two = dailies.shift()
+  if (one && two) {
+    PUZZLES.splice(i, 0, one)
+    PUZZLES.splice(i + 1, 0, two)
+  }
   i += 7
 }

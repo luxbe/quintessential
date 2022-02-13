@@ -1,6 +1,18 @@
 import { HelpIcon, SettingsIcon, StatsIcon } from './Icons'
 
-export const Header = ({ theme, puzzleNumber, date, setModalState }) => {
+interface HeaderProps {
+  theme?: string
+  puzzleNumber?: string | number
+  date?: Date
+  setModalState: (obj: Record<string, unknown>) => void
+}
+
+export const Header = ({
+  theme,
+  puzzleNumber,
+  date,
+  setModalState,
+}: HeaderProps) => {
   return (
     <>
       <header className="mb-4">

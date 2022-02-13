@@ -1,6 +1,11 @@
 import { Modal } from './Modal'
 
-export const HelpModal = ({ open, onClose }) => (
+interface HelpModalProps {
+  open: boolean
+  onClose: () => void
+}
+
+export const HelpModal = ({ open, onClose }: HelpModalProps) => (
   <Modal
     open={open}
     onClose={onClose}

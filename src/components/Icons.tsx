@@ -1,4 +1,8 @@
-export const HelpIcon = ({ onClick, fill = '#454545' }) => (
+interface IconProps {
+  onClick: () => void
+  fill?: string
+}
+export const HelpIcon = ({ onClick, fill = '#454545' }: IconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -14,7 +18,7 @@ export const HelpIcon = ({ onClick, fill = '#454545' }) => (
   </svg>
 )
 
-export const CloseIcon = ({ onClick, fill = '#454545' }) => (
+export const CloseIcon = ({ onClick, fill = '#454545' }: IconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -30,7 +34,7 @@ export const CloseIcon = ({ onClick, fill = '#454545' }) => (
   </svg>
 )
 
-export const SettingsIcon = ({ onClick, fill = '#454545' }) => (
+export const SettingsIcon = ({ onClick, fill = '#454545' }: IconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -46,7 +50,7 @@ export const SettingsIcon = ({ onClick, fill = '#454545' }) => (
   </svg>
 )
 
-export const StatsIcon = ({ onClick, fill = '#454545' }) => (
+export const StatsIcon = ({ onClick, fill = '#454545' }: IconProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"

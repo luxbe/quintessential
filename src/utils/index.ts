@@ -1,7 +1,8 @@
 import shuffle from 'lodash/shuffle'
 import chunk from 'lodash/chunk'
+import { GameState, TileElementData, TileState } from '../types'
 
-export const getJumbledWords = (solvedWords, swaps = 8) => {
+export const getJumbledWords = (solvedWords: string[], swaps = 8) => {
   const letters = solvedWords.join('').split('')
 
   // get 8 pairs of letters that don't match and swap them
@@ -19,9 +20,17 @@ export const getJumbledWords = (solvedWords, swaps = 8) => {
 }
 
 export const getTileStateByIndex = (
-  { jumbledWords, solvedWords, activeIndex },
-  index,
-) => {
+  {
+    jumbledWords,
+    solvedWords,
+    activeIndex,
+  }: {
+    jumbledWords: string[]
+    solvedWords: string[]
+    activeIndex: number | null
+  },
+  index: number,
+): TileState => {
   const wordIndex = Math.floor(index / 5)
   const word = jumbledWords[wordIndex].split('')
   const solvedWord = solvedWords[wordIndex].split('')
@@ -46,10 +55,10 @@ export const getTileStateByIndex = (
   return { index, active, color, state, correct }
 }
 
-export const getWordState = (state, index) =>
+export const getWordState = (state: GameState, index: number) =>
   new Array(5).fill('').map((_, i) => getTileStateByIndex(state, index * 5 + i))
 
-export const performSwap = (words, i1, i2) => {
+export const performSwap = (words: string[], i1: number, i2: number) => {
   const str = words.join('').split('')
   const temp = str[i1]
   str[i1] = str[i2]
@@ -57,41 +66,49 @@ export const performSwap = (words, i1, i2) => {
   return chunk(str.join(''), 5).map((s) => s.join(''))
 }
 
-export const getTranslateXY = (element) => {
+export const getTranslateXY = (element: HTMLElement) => {
   if (!element) return { x: 0, y: 0 }
   const style = window.getComputedStyle(element)
   const matrix = new DOMMatrixReadOnly(style.transform)
   return { x: matrix.m41, y: matrix.m42 }
 }
 
-export const getTileElementData = (el) => ({
-  x: el ? el.offsetLeft : null,
-  y: el ? el.offsetTop : null,
-  color: el ? getBackgroundColor(el) : null,
-  index: el ? +el.dataset.index : null,
+export const getTileElementData = (
+  el: HTMLElement | null,
+): TileElementData => ({
+  x: el ? el.offsetLeft : -1,
+  y: el ? el.offsetTop : -1,
+  color: el ? getBackgroundColor(el) : 'transparent',
+  index: el ? +(el.dataset.index ?? '-1') : -1,
 })
 
-export const getTileElementAtXY = (x, y, _el) =>
+export const getTileElementAtXY = (
+  x: number,
+  y: number,
+  _el: HTMLElement,
+): HTMLElement =>
   document
     .elementsFromPoint(x, y)
-    .find((el) => el.classList.contains('tile') && el !== _el)
+    .find((el) => el.classList.contains('tile') && el !== _el) as HTMLElement
 
-export const getHumanizedTime = (s) =>
+export const getHumanizedTime = (s: number) =>
   `${Math.floor(s / 60)}:${padNum(Math.floor(s % 60))}`
 
-export const wordsToEmoji = (words) =>
-  words.map((w) => w.map((l) => EMOJI[l.state]).join('')).join('\n')
+export const wordsToEmoji = (words: TileState[][]) =>
+  words
+    .map((w: TileState[]) => w.map((l) => EMOJI[l.state]).join(''))
+    .join('\n')
 
-export const validatePuzzleString = (s) => /(([a-z]){5},?){5}/.test(s)
+export const validatePuzzleString = (s: string) => /(([a-z]){5},?){5}/.test(s)
 
-const getBackgroundColor = (element) =>
+const getBackgroundColor = (element: HTMLElement) =>
   element
     ? window
         .getComputedStyle(element, null)
         .getPropertyValue('background-color')
-    : null
+    : 'transparent'
 
-const padNum = (n) => n.toString().padStart(2, '0')
+const padNum = (n: number) => n.toString().padStart(2, '0')
 
 const EMOJI = ['⬛', '🟩', '🟨']
 const COLORS = ['#3a3a3c', '#528a4c', '#a39035']

@@ -1,6 +1,12 @@
 import { getHumanizedTime } from '../utils'
 
-export const Footer = ({ timer, seconds, moveCount }) => (
+interface FooterProps {
+  timer: boolean
+  moveCount: number
+  seconds: number
+}
+
+export const Footer = ({ timer, seconds, moveCount }: FooterProps) => (
   <div
     className={`flex ${
       timer ? 'justify-between' : 'justify-center'

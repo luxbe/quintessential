@@ -1,5 +1,21 @@
 import classNames from 'classnames'
-import { animated } from 'react-spring'
+import { animated, SpringValue } from 'react-spring'
+import { TileState } from '../types'
+
+interface SpringState {
+  x: SpringValue<number>
+  y: SpringValue<number>
+  backgroundColor: SpringValue<string>
+}
+
+interface WordProps {
+  word: string
+  index: number
+  wordState: TileState[]
+  bindGestures: (i: number) => {}
+  springs: SpringState[]
+  isEditMode: boolean
+}
 
 export const Word = ({
   word,
@@ -8,7 +24,7 @@ export const Word = ({
   bindGestures,
   springs,
   isEditMode,
-}) => {
+}: WordProps) => {
   return (
     <div className="word">
       {word.split('').map((letter, li) => {

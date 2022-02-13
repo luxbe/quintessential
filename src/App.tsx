@@ -13,15 +13,16 @@ import useLocalStorage from './utils/useLocalStorage'
 const modalInitialState = {
   help: localStorage.getItem('quint-help') !== '1',
   settings: false,
-  win: false,
+  stats: false,
 }
 localStorage.setItem('quint-help', '1')
 
-function App() {
+const App = () => {
   const [modalState, _setModalState] = useState(modalInitialState)
   const [settings, setSettings] = useLocalStorage('quint-settings', {})
 
-  const setModalState = (c) => _setModalState((ms) => ({ ...ms, ...c }))
+  const setModalState = (c: Record<string, unknown>) =>
+    _setModalState((ms) => ({ ...ms, ...c }))
   const { state, ...helpers } = useAppState({
     onWin: () => setTimeout(() => setModalState({ stats: true }), 2000),
   })
@@ -37,7 +38,7 @@ function App() {
         />
 
         <div className="-mt-[0.5rem] flex flex-col items-center justify-center max-w-sm mx-auto">
-          {state.jumbledWords.map((word, index) => (
+          {state.jumbledWords.map((word: string, index: number) => (
             <Word
               key={word}
               word={word}
@@ -58,7 +59,6 @@ function App() {
         ) : (
           <Footer
             seconds={state.seconds}
-            showStats={!state.isEditMode}
             moveCount={state.moveCount}
             timer={settings?.timer}
           />
@@ -79,11 +79,15 @@ function App() {
       />
 
       <StatsModal
-        onNewGame={helpers.onNewGame}
         settings={settings}
         open={modalState.stats}
         onClose={() => setModalState({ stats: false })}
-        {...state}
+        isComplete={state.isComplete}
+        moveCount={state.moveCount}
+        seconds={state.seconds}
+        puzzleNumber={state.puzzleNumber}
+        stats={state.stats}
+        boardState={state.boardState}
       />
     </>
   )

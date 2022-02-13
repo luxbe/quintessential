@@ -1,45 +1,9 @@
-import { Modal } from './Modal'
-
-export const SettingsModal = ({
-  settings,
-  setSettings,
-  open,
-  onClose,
-  onNewGame,
-}) => (
-  <Modal
-    open={open}
-    onClose={onClose}
-    title="Settings"
-    className="flex flex-col space-y-6"
-  >
-    <Switch
-      label="Timer"
-      value={settings?.timer}
-      setValue={(v) => setSettings((s) => ({ ...s, timer: v }))}
-    />
-    <button
-      onClick={() => {
-        onClose()
-        onNewGame()
-      }}
-    >
-      Random game
-    </button>
-    <button
-      onClick={() => {
-        Object.keys(localStorage)
-          .filter((k) => k.startsWith('quintessential'))
-          .forEach((k) => localStorage.removeItem(k))
-        window.location.reload()
-      }}
-    >
-      Clear Stats
-    </button>
-  </Modal>
-)
-
-const Switch = ({ label, value, setValue }) => (
+interface SwitchProps {
+  label: string
+  value: boolean
+  setValue: (v: boolean) => {}
+}
+export const Switch = ({ label, value, setValue }: SwitchProps) => (
   <div>
     <div className="w-full flex justify-between items-center">
       <span>{label}</span>

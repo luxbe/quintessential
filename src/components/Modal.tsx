@@ -1,7 +1,20 @@
-import { useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { CloseIcon } from './Icons'
 
-export const Modal = ({ open, onClose, title, children, className = '' }) => {
+interface ModalProps {
+  open: boolean
+  onClose: () => {}
+  title: string
+  className: string
+  children: ReactElement | ReactElement[]
+}
+export const Modal = ({
+  open,
+  onClose,
+  title,
+  children,
+  className = '',
+}: ModalProps) => {
   const [shouldRender, setShouldRender] = useState(open)
 
   useEffect(() => {

@@ -1,7 +1,13 @@
 import { useState } from 'react'
 import * as utils from '../utils'
 
-export const PuzzleEditor = ({ onJumble, jumbledWords }) => {
+export const PuzzleEditor = ({
+  onJumble,
+  jumbledWords,
+}: {
+  onJumble: (str: string) => void
+  jumbledWords: string[]
+}) => {
   const [solved, setSolved] = useState('')
   return (
     <div className="font-mono text-sm">
