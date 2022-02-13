@@ -37,9 +37,9 @@ export const getTileStateByIndex = (
 
   // is this tile in the right word but wrong position?
   const belongsToWord = unsolvedLetters.includes(char)
-  const dupeIndex = word.filter((l, li) => l === char && li < index % 5).length
-  const solvedDupeCount = unsolvedLetters.filter((l) => l === char).length
-  const almost = !correct && belongsToWord && dupeIndex < solvedDupeCount
+  // const dupeIndex = word.filter((l, li) => l === char && li < index % 5).length
+  // const solvedDupeCount = unsolvedLetters.filter((l) => l === char).length
+  const almost = !correct && belongsToWord // && dupeIndex < solvedDupeCount
   const state = correct ? 1 : almost ? 2 : 0
   const color = COLORS[state]
 
