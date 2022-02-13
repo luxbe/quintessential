@@ -1,7 +1,6 @@
+import { ONE_DAY } from '../constants'
 import { GameState } from '../types'
 import { applySave, getBoardState, getJumbledWords, getPuzzle } from './index'
-
-const ONE_DAY = 1000 * 60 * 60 * 24
 
 const getInitialState = ({
   dateString,

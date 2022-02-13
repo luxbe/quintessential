@@ -3,6 +3,7 @@ import chunk from 'lodash/chunk'
 import { GameState, TileElementData, TileState } from '../types'
 import { WORDS } from '../constants/randomPuzzles'
 import { PUZZLES } from '../constants/puzzles'
+import { ONE_DAY, SAVE_KEY } from '../constants'
 
 const getBackgroundColor = (element: HTMLElement) =>
   element
@@ -146,7 +147,7 @@ export const getPuzzle = (date: Date | undefined) => {
 
 export const applySave = (state: GameState) => {
   const save = localStorage.getItem(
-    `quintessential-save-${state.solvedWords.join(',')}`,
+    `${SAVE_KEY}-${state.solvedWords.join(',')}`,
   )
   if (save) {
     const [words, other] = save.split(':')
@@ -168,3 +169,18 @@ export const getIsComplete = ({
   jumbledWords.every((w, wi) =>
     w.split('').every((c, ci) => c === solvedWords[wi][ci]),
   )
+
+export const getParams = () => {
+  const params = new URLSearchParams(window.location.search.replace('?', ''))
+  const todayDateString = new Date(Date.now() - ONE_DAY).toISOString()
+  const isEditMode = params.get('e') === ''
+  const dateString = params.get('p') || todayDateString
+  return { dateString, isEditMode }
+}
+
+export const saveGame = (state: GameState) => {
+  localStorage.setItem(
+    `${SAVE_KEY}-${state.solvedWords.join(',')}`,
+    `${state.jumbledWords.join(',')}:${state.moveCount}-${state.seconds}`,
+  )
+}

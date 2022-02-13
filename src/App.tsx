@@ -8,13 +8,14 @@ import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import * as utils from './utils'
 import { useAppState } from './utils/useAppState'
+import { HELP_KEY } from './constants'
 
 const modalInitialState = {
-  help: localStorage.getItem('quint-help') !== '1',
+  help: localStorage.getItem(HELP_KEY) !== '1',
   settings: false,
   stats: false,
 }
-localStorage.setItem('quint-help', '1')
+localStorage.setItem(HELP_KEY, '1')
 
 const App = () => {
   const [modalState, _setModalState] = useState(modalInitialState)

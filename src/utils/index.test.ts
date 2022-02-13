@@ -67,3 +67,11 @@ describe('getPuzzle', () => {
 describe('applySave', () => {
   it.todo('applies data in localstorage to game state')
 })
+
+describe('getParams', () => {
+  it.todo('returns applicable uri params')
+})
+
+describe('saveGame', () => {
+  it.todo('saves game')
+})

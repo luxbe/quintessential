@@ -44,3 +44,15 @@ export interface SpringState {
   y: SpringValue<number>
   backgroundColor: SpringValue<string>
 }
+
+export interface AppState {
+  state: GameState
+  stats: Stats
+  settings: GameSettings
+  onRandomGame: () => void
+  onEditPuzzle: (words: string) => void
+  setStats: (v: any) => {}
+  setSettings: (v: any) => {}
+  bindGestures: (i: number) => {}
+  springs: SpringState[]
+}
