@@ -1,8 +1,9 @@
 import shuffle from 'lodash/shuffle'
 import chunk from 'lodash/chunk'
-import { WORDS } from './randomPuzzles'
 import { GameState, TileElementData, TileState } from '../types'
-import { PUZZLES } from './puzzles'
+import { WORDS } from '../constants/randomPuzzles'
+import { PUZZLES } from '../constants/puzzles'
+
 
 export const getJumbledWords = (solvedWords: string[], swaps = 8) => {
   const letters = solvedWords.join('').split('')
