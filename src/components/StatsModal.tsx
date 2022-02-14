@@ -55,6 +55,9 @@ export const StatsModal = ({
     setShowMessage(true)
     setTimeout(() => setShowMessage(false), 2500)
     navigator.clipboard.writeText(shareText)
+
+    // @ts-ignore
+    gtag('event', 'share')
   }
   return (
     <Modal

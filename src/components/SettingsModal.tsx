@@ -27,9 +27,11 @@ export const SettingsModal = ({
       id="timer-switch"
       label="Timer"
       value={settings?.timer}
-      setValue={(v: boolean) =>
+      setValue={(v: boolean) => {
+        // @ts-ignore
+        gtag('event', 'change_setting', { name: 'timer', value: !!v })
         setSettings((s: GameSettings) => ({ ...s, timer: v }))
-      }
+      }}
     />
     <button
       id="random-button"

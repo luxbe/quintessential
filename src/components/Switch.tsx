@@ -2,7 +2,7 @@ interface SwitchProps {
   id: string
   label: string
   value: boolean
-  setValue: (v: boolean) => {}
+  setValue: (v: boolean) => void
 }
 export const Switch = ({ id, label, value, setValue }: SwitchProps) => (
   <div>
