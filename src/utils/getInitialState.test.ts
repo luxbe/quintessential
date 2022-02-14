@@ -48,7 +48,7 @@ describe('getInitialState', () => {
     expect(result).toEqual({
       ...expectedInitialState,
       date: undefined,
-      solvedWords,
+      solvedWords: solvedWords.split(','),
       jumbledWords,
       boardState: getBoardState(result),
     })
