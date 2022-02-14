@@ -5,11 +5,13 @@ import { applySave, getBoardState, getJumbledWords, getPuzzle } from './index'
 const getInitialState = ({
   dateString,
   solvedWords,
+  jumbledWords,
   isEditMode = false,
 }: {
   isEditMode?: boolean
   dateString?: string
-  solvedWords?: string[]
+  solvedWords?: string
+  jumbledWords?: string
 } = {}): GameState => {
   const date = dateString
     ? new Date(+new Date(dateString) + ONE_DAY)
@@ -29,8 +31,10 @@ const getInitialState = ({
   }
 
   if (solvedWords) {
-    state.solvedWords = solvedWords
-    state.jumbledWords = getJumbledWords(solvedWords)
+    state.solvedWords = solvedWords.split(',')
+    state.jumbledWords = jumbledWords
+      ? jumbledWords.split(',')
+      : getJumbledWords(state.solvedWords)
   } else if (isEditMode) {
     state.solvedWords = ['fghij', 'klmno', 'pqrst', 'uvwxy', 'abcde']
     state.jumbledWords = ['abcde', 'fghij', 'klmno', 'pqrst', 'uvwxy']

@@ -175,7 +175,9 @@ export const getParams = () => {
   const todayDateString = new Date(Date.now() - ONE_DAY).toISOString()
   const isEditMode = params.get('e') === ''
   const dateString = params.get('p') || todayDateString
-  return { dateString, isEditMode }
+  const solvedWords = params.get('s') || ''
+  const jumbledWords = params.get('j') || ''
+  return { dateString, isEditMode, solvedWords, jumbledWords }
 }
 
 export const saveGame = (state: GameState) => {

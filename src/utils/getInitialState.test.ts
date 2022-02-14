@@ -43,7 +43,7 @@ describe('getInitialState', () => {
   })
 
   it('allows puzzle editing', () => {
-    const solvedWords = ['koala', 'steer', 'horse', 'lemur', 'tiger']
+    const solvedWords = ['koala', 'steer', 'horse', 'lemur', 'tiger'].join(',')
     const result = getInitialState({ solvedWords })
     expect(result).toEqual({
       ...expectedInitialState,

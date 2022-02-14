@@ -8,8 +8,13 @@ import useLocalStorage from './useLocalStorage'
 import useGestures from './useGestures'
 
 const initialStats: Stats = { winCount: 0, moveCount: 0, secondCount: 0 }
-const { dateString, isEditMode } = utils.getParams()
-const initialState = getInitialState({ dateString, isEditMode })
+const { dateString, isEditMode, jumbledWords, solvedWords } = utils.getParams()
+const initialState = getInitialState({
+  dateString,
+  isEditMode,
+  solvedWords,
+  jumbledWords,
+})
 
 export const useAppState = ({ onWin }: { onWin: () => void }): AppState => {
   const [state, setState] = useState(initialState)
@@ -36,7 +41,7 @@ export const useAppState = ({ onWin }: { onWin: () => void }): AppState => {
   }
 
   const onEditPuzzle = (words: string) => {
-    setState(getInitialState({ solvedWords: words.split(','), isEditMode }))
+    setState(getInitialState({ solvedWords: words, isEditMode }))
     stopwatch.reset()
   }
 

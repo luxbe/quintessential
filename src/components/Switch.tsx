@@ -15,7 +15,7 @@ export const Switch = ({ id, label, value, setValue }: SwitchProps) => (
           }`}
         >
           <label
-            htmlFor="toggle"
+            htmlFor={id}
             className={`absolute left-0 w-6 h-6 mb-2 transition duration-100 ease-linear transform bg-white border-2 rounded-full cursor-pointer ${
               value
                 ? 'translate-x-full border-green'
