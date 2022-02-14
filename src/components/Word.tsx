@@ -1,4 +1,3 @@
-import classNames from 'classnames'
 import { animated } from 'react-spring'
 import { SpringState, TileState } from '../types'
 
@@ -23,14 +22,17 @@ export const Word = ({
     <div className="word">
       {word.split('').map((letter, li) => {
         const index = wi * 5 + li
-        const disableClick = !isEditMode && wordState[li].correct
+        const { state, active } = wordState[li]
+        const disableClick = !isEditMode && state === 1
+        const className =
+          state === 1 ? 'correct' : state === 2 ? 'almost' : 'wrong'
         return (
           <animated.div
             {...(disableClick ? {} : bindGestures(index))}
             key={index}
             data-index={index}
-            data-correct={wordState[li].correct}
-            className={`tile ${classNames(wordState[li])}`}
+            data-correct={state === 1}
+            className={`tile ${active ? 'active' : ''} ${className}`}
             style={{
               ...springs[index],
               pointerEvents: disableClick ? 'none' : 'auto',

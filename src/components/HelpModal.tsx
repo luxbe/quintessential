@@ -7,6 +7,7 @@ interface HelpModalProps {
 
 export const HelpModal = ({ open, onClose }: HelpModalProps) => (
   <Modal
+    id="help-modal"
     open={open}
     onClose={onClose}
     title="How to play"

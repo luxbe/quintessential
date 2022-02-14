@@ -1,9 +1,10 @@
 interface SwitchProps {
+  id: string
   label: string
   value: boolean
   setValue: (v: boolean) => {}
 }
-export const Switch = ({ label, value, setValue }: SwitchProps) => (
+export const Switch = ({ id, label, value, setValue }: SwitchProps) => (
   <div>
     <div className="w-full flex justify-between items-center">
       <span>{label}</span>
@@ -22,8 +23,8 @@ export const Switch = ({ label, value, setValue }: SwitchProps) => (
             }`}
           ></label>
           <input
+            id={id}
             type="checkbox"
-            id="toggle"
             name="toggle"
             className="w-full h-full appearance-none focus:outline-none"
             onClick={() => setValue(!value)}

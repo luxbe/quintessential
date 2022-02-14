@@ -9,7 +9,7 @@ export const HelpIcon = ({ onClick, fill = '#454545' }: IconProps) => (
     height="24"
     viewBox="0 0 24 24"
     onClick={onClick}
-    className="cursor-pointer"
+    className="help-icon cursor-pointer"
   >
     <path
       fill={fill}
@@ -25,7 +25,7 @@ export const CloseIcon = ({ onClick, fill = '#454545' }: IconProps) => (
     height="24"
     viewBox="0 0 24 24"
     onClick={onClick}
-    className="cursor-pointer"
+    className="close-icon cursor-pointer"
   >
     <path
       fill={fill}
@@ -41,7 +41,7 @@ export const SettingsIcon = ({ onClick, fill = '#454545' }: IconProps) => (
     height="24"
     viewBox="0 0 24 24"
     onClick={onClick}
-    className="cursor-pointer"
+    className="settings-icon cursor-pointer"
   >
     <path
       fill={fill}
@@ -57,7 +57,7 @@ export const StatsIcon = ({ onClick, fill = '#454545' }: IconProps) => (
     height="24"
     viewBox="0 0 24 24"
     onClick={onClick}
-    className="cursor-pointer"
+    className="stats-icon cursor-pointer"
   >
     <path
       fill={fill}

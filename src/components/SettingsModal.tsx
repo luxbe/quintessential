@@ -17,12 +17,14 @@ export const SettingsModal = ({
   onRandomGame,
 }: SettingsModalProps) => (
   <Modal
+    id="settings-modal"
     open={open}
     onClose={onClose}
     title="Settings"
     className="flex flex-col space-y-6"
   >
     <Switch
+      id="timer-switch"
       label="Timer"
       value={settings?.timer}
       setValue={(v: boolean) =>
@@ -30,6 +32,7 @@ export const SettingsModal = ({
       }
     />
     <button
+      id="random-button"
       onClick={() => {
         onClose()
         onRandomGame()
@@ -38,6 +41,7 @@ export const SettingsModal = ({
       Random game
     </button>
     <button
+      id="clear-stats-button"
       onClick={() => {
         Object.keys(localStorage)
           .filter((k) => k.startsWith('quintessential'))

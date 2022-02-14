@@ -4,13 +4,16 @@ import { getHumanizedTime } from '../utils'
 import { Modal } from './Modal'
 
 interface StatProps {
+  id: string
   num: number | string
   label: string
 }
 
-const Stat = ({ num, label }: StatProps) => (
+const Stat = ({ id, num, label }: StatProps) => (
   <div className="flex flex-col">
-    <span className="text-2xl font-semibold">{num}</span>
+    <span id={`stat-${id}`} className="text-2xl font-semibold">
+      {num}
+    </span>
     <span className="text-xs mt-1 text-light-gray">{label}</span>
   </div>
 )
@@ -55,6 +58,7 @@ export const StatsModal = ({
   }
   return (
     <Modal
+      id="stats-modal"
       open={open}
       onClose={onClose}
       title="Statistics"
@@ -63,19 +67,25 @@ export const StatsModal = ({
       <h2 className="mb-2">All Time</h2>
 
       <div className="flex space-x-8 mb-6">
-        <Stat num={stats.winCount} label="Wins" />
-        <Stat num={avgMoves} label="Avg. Moves" />
-        {settings.timer && <Stat num={avgTime} label="Avg. Time" />}
+        <Stat id="wins" num={stats.winCount} label="Wins" />
+        <Stat id="avg-moves" num={avgMoves} label="Avg. Moves" />
+        {settings.timer && (
+          <Stat id="avg-time" num={avgTime} label="Avg. Time" />
+        )}
       </div>
 
       {isComplete ? (
-        <div>
+        <div id="last-game-stats">
           <h2 className="mb-2">Last Game</h2>
 
           <div className="flex space-x-8 mb-6">
-            <Stat num={puzzleName || 'random'} label="Puzzle #" />
-            <Stat num={moveCount} label="Moves" />
-            {settings.timer && <Stat num={time} label="Time" />}
+            <Stat
+              id="puzzle-num"
+              num={puzzleName || 'random'}
+              label="Puzzle #"
+            />
+            <Stat id="moves" num={moveCount} label="Moves" />
+            {settings.timer && <Stat id="time" num={time} label="Time" />}
           </div>
 
           <button onClick={onShare}>{showMessage ? 'Copied!' : 'Share'}</button>

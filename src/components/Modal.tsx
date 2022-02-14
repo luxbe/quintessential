@@ -4,11 +4,13 @@ import { CloseIcon } from './Icons'
 interface ModalProps {
   open: boolean
   onClose: () => void
+  id: string
   title: string
   className: string
   children: ReactElement | ReactElement[]
 }
 export const Modal = ({
+  id,
   open,
   onClose,
   title,
@@ -19,14 +21,14 @@ export const Modal = ({
 
   useEffect(() => {
     if (open) setShouldRender(true)
-    else setTimeout(() => setShouldRender(false), 250)
+    else setTimeout(() => setShouldRender(false), 100)
   }, [open])
 
   return (
     <div onClick={onClose} className={`modal ${open ? 'open' : ''}`}>
       <div className="modal-inner" onClick={(e) => e.stopPropagation()}>
-        {shouldRender && (
-          <>
+        {(open || shouldRender) && (
+          <div id={id}>
             <header>
               <div style={{ width: 25 }} />
 
@@ -35,7 +37,7 @@ export const Modal = ({
               <CloseIcon onClick={onClose} />
             </header>
             <div className={`py-6 px-6 ${className}`}>{children}</div>
-          </>
+          </div>
         )}
       </div>
     </div>
