@@ -18,6 +18,7 @@ const initialState = getInitialState({
 
 export const useAppState = ({ onWin }: { onWin: () => void }): AppState => {
   const [state, setState] = useState(initialState)
+  const [message, setMessage] = useState('')
   const offsetTimestamp = new Date(Date.now() + state.seconds * 1000)
   const autoStart = !state.isComplete && !state.isEditMode
   const stopwatch = useStopwatch({ autoStart, offsetTimestamp })
@@ -69,8 +70,6 @@ export const useAppState = ({ onWin }: { onWin: () => void }): AppState => {
       if (isComplete && !state.isEditMode) {
         // @ts-ignore
         gtag('event', 'level_end', { level_name: state.puzzleNumber })
-
-        onWin()
         stopwatch.pause()
         setStats((s: Stats) => ({
           ...s,
@@ -78,6 +77,11 @@ export const useAppState = ({ onWin }: { onWin: () => void }): AppState => {
           moveCount: s.moveCount + moveCount,
           secondCount: s.secondCount + state.seconds,
         }))
+
+        setTimeout(() => {
+          setMessage(utils.getMessageFromMoveCount(moveCount))
+          onWin()
+        }, 500)
       }
 
       return { ...state, activeIndex, moveCount, jumbledWords, isComplete }
@@ -85,6 +89,17 @@ export const useAppState = ({ onWin }: { onWin: () => void }): AppState => {
 
   const { bindGestures, springs } = useGestures({ state, onSwap, onSelect })
 
-  const helpers = { onRandomGame, onEditPuzzle, setStats, setSettings }
-  return { state, stats, settings, bindGestures, springs, ...helpers }
+  return {
+    state,
+    stats,
+    settings,
+    bindGestures,
+    springs,
+    onRandomGame,
+    onEditPuzzle,
+    setStats,
+    setSettings,
+    message,
+    setMessage,
+  }
 }

@@ -3,6 +3,7 @@ import { Word } from './components/Word'
 import { StatsModal } from './components/StatsModal'
 import { SettingsModal } from './components/SettingsModal'
 import { HelpModal } from './components/HelpModal'
+import { ToastMessage } from './components/ToastMessage'
 import { PuzzleEditor } from './components/PuzzleEditor'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
@@ -36,7 +37,7 @@ const App = () => {
           setModalState={setModalState}
         />
 
-        <div className="-mt-[0.5rem] flex flex-col items-center justify-center max-w-sm mx-auto">
+        <div className="relative -mt-[0.5rem] flex flex-col items-center justify-center max-w-sm mx-auto">
           {state.jumbledWords.map((word: string, index: number) => (
             <Word
               key={word}
@@ -48,6 +49,7 @@ const App = () => {
               wordState={utils.getWordState(state, index)}
             />
           ))}
+          <ToastMessage message={helpers.message} />
         </div>
 
         {state.isEditMode ? (

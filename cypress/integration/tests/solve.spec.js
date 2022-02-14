@@ -41,6 +41,7 @@ describe('solve', () => {
     cy.visit('http://localhost:3000/?p=2022-02-13&f')
 
     cy.swapTiles(17, 5)
+    cy.swapTiles(4, 13)
     cy.swapTiles(4, 6)
     cy.swapTiles(20, 8)
     cy.swapTiles(24, 16)
@@ -48,7 +49,7 @@ describe('solve', () => {
     cy.swapTiles(21, 22)
     cy.swapTiles(1, 11)
     cy.swapTiles(2, 13)
-    cy.swapTiles(11, 13)
+    cy.swapTiles(2, 6)
 
     cy.get('#last-game-stats').should('have.length', 1)
     cy.get('#stat-wins').contains('2')

@@ -49,10 +49,12 @@ export interface AppState {
   state: GameState
   stats: Stats
   settings: GameSettings
+  message: string
   onRandomGame: () => void
   onEditPuzzle: (words: string) => void
   setStats: (v: any) => {}
   setSettings: (v: any) => {}
+  setMessage: (v: any) => void
   bindGestures: (i: number) => {}
   springs: SpringState[]
 }

@@ -187,3 +187,12 @@ export const saveGame = (state: GameState) => {
     `${state.jumbledWords.join(',')}:${state.moveCount}-${state.seconds}`,
   )
 }
+
+export const getMessageFromMoveCount = (count: number) => {
+  if (count === 8) return 'Perfect!'
+  if (count === 9) return 'Amazing!'
+  if (count === 10) return 'Great!'
+  if (count === 11) return 'Good!'
+  if (count === 12) return 'Not Bad!'
+  return 'Done!'
+}
