@@ -1,11 +1,14 @@
 Cypress.Commands.add('swapTiles', (i1, i2) => {
   cy.get('.tile').eq(i1).click()
   cy.get('.tile').eq(i2).click()
-  // eslint-disable-next-line
-  cy.wait(200)
 })
 
 let LOCAL_STORAGE_MEMORY = {}
+
+Cypress.Commands.add('resetLocalStorage', () => {
+  LOCAL_STORAGE_MEMORY = {}
+  localStorage.clear()
+})
 
 Cypress.Commands.add('saveLocalStorage', () => {
   Object.keys(localStorage).forEach((key) => {

@@ -8,7 +8,7 @@ import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import * as utils from './utils'
 import { useAppState } from './utils/useAppState'
-import { HELP_KEY } from './constants'
+import { HELP_KEY, MODAL_DURATION } from './constants'
 
 const modalInitialState = {
   help: localStorage.getItem(HELP_KEY) !== '1',
@@ -22,7 +22,8 @@ const App = () => {
   const setModalState = (c: Record<string, unknown>) =>
     _setModalState((ms) => ({ ...ms, ...c }))
 
-  const onWin = () => setTimeout(() => setModalState({ stats: true }), 2000)
+  const onWin = () =>
+    setTimeout(() => setModalState({ stats: true }), MODAL_DURATION)
   const { state, ...helpers } = useAppState({ onWin })
 
   return (

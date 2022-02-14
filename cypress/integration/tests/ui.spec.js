@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe('quintessential', () => {
+describe('interface', () => {
   beforeEach(() => {
     cy.restoreLocalStorage()
   })
@@ -10,18 +10,19 @@ describe('quintessential', () => {
   })
 
   it('should display the help modal', () => {
-    cy.visit('http://localhost:3000/')
+    cy.resetLocalStorage()
+    cy.visit('http://localhost:3000/?f')
     cy.get('#help-modal').should('have.length', 1)
     cy.get('.close-icon').click()
   })
 
   it('should not display the help modal again', () => {
-    cy.visit('http://localhost:3000/')
+    cy.visit('http://localhost:3000/?f')
     cy.get('#help-modal').should('have.length', 0)
   })
 
   it('can open/close help modal', () => {
-    cy.visit('http://localhost:3000/')
+    cy.visit('http://localhost:3000/?f')
     cy.get('.help-icon').click()
     cy.get('#help-modal').should('have.length', 1)
     cy.get('.close-icon').click()
@@ -29,7 +30,7 @@ describe('quintessential', () => {
   })
 
   it('can open/close settings modal', () => {
-    cy.visit('http://localhost:3000/')
+    cy.visit('http://localhost:3000/?f')
     cy.get('.settings-icon').click()
     cy.get('#settings-modal').should('have.length', 1)
     cy.get('.close-icon').click()
@@ -37,7 +38,7 @@ describe('quintessential', () => {
   })
 
   it('can open/close stats modal', () => {
-    cy.visit('http://localhost:3000/')
+    cy.visit('http://localhost:3000/?f')
     cy.get('.stats-icon').click()
     cy.get('#last-game-stats').should('have.length', 0)
     cy.get('#stats-modal').should('have.length', 1)
@@ -46,7 +47,7 @@ describe('quintessential', () => {
   })
 
   it('can toggle timer', () => {
-    cy.visit('http://localhost:3000/')
+    cy.visit('http://localhost:3000/?f')
 
     // ensure timer is not displayed
     cy.get('#timer').should('have.length', 0)
@@ -70,7 +71,7 @@ describe('quintessential', () => {
   })
 
   it('can play random game', () => {
-    cy.visit('http://localhost:3000/')
+    cy.visit('http://localhost:3000/?f')
     cy.get('.settings-icon').click()
     cy.get('#settings-modal').should('have.length', 1)
     cy.get('#random-button').click()
@@ -79,7 +80,7 @@ describe('quintessential', () => {
   })
 
   it('can clear stats', () => {
-    cy.visit('http://localhost:3000/')
+    cy.visit('http://localhost:3000/?f')
     cy.get('.settings-icon').click()
     cy.get('#settings-modal').should('have.length', 1)
     cy.get('#clear-stats-button').click()
