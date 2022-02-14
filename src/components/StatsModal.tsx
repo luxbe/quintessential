@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { GameSettings, Stats } from '../types'
-import { getHumanizedTime } from '../utils'
+import { getHumanizedTime, track } from '../utils'
 import { Modal } from './Modal'
 
 interface StatProps {
@@ -55,9 +55,7 @@ export const StatsModal = ({
     setShowMessage(true)
     setTimeout(() => setShowMessage(false), 2500)
     navigator.clipboard.writeText(shareText)
-
-    // @ts-ignore
-    gtag('event', 'share')
+    track('event', 'share')
   }
   return (
     <Modal

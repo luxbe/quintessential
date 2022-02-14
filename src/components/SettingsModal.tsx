@@ -1,4 +1,5 @@
 import { GameSettings } from '../types'
+import { track } from '../utils'
 import { Modal } from './Modal'
 import { Switch } from './Switch'
 
@@ -28,8 +29,7 @@ export const SettingsModal = ({
       label="Timer"
       value={settings?.timer}
       setValue={(v: boolean) => {
-        // @ts-ignore
-        gtag('event', 'change_setting', { name: 'timer', value: !!v })
+        track('event', 'change_setting', { name: 'timer', value: !!v })
         setSettings((s: GameSettings) => ({ ...s, timer: v }))
       }}
     />

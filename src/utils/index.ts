@@ -196,3 +196,11 @@ export const getMessageFromMoveCount = (count: number) => {
   if (count === 12) return 'Not Bad!'
   return 'Done!'
 }
+
+// @ts-ignore
+export const track = (...props) => {
+  if (process.env.NODE_ENV === 'production') {
+    // @ts-ignore
+    window.gtag(...props)
+  }
+}

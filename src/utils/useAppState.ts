@@ -26,8 +26,9 @@ export const useAppState = ({ onWin }: { onWin: () => void }): AppState => {
   const [stats, setStats] = useLocalStorage(constants.STATS_KEY, initialStats)
 
   useEffect(() => {
-    // @ts-ignore
-    gtag('event', 'level_start', { level_name: initialState.puzzleNumber })
+    utils.track('event', 'level_start', {
+      level_name: initialState.puzzleNumber,
+    })
   }, [])
 
   useEffect(() => {
@@ -43,8 +44,7 @@ export const useAppState = ({ onWin }: { onWin: () => void }): AppState => {
 
   const onRandomGame = () => {
     setState(getInitialState({ isEditMode }))
-    // @ts-ignore
-    gtag('event', 'level_start', { level_name: 'random' })
+    utils.track('event', 'level_start', { level_name: 'random' })
     stopwatch.reset()
   }
 
@@ -64,12 +64,10 @@ export const useAppState = ({ onWin }: { onWin: () => void }): AppState => {
       const jumbledWords = utils.performSwap(state.jumbledWords, index1, index2)
       const isComplete = utils.getIsComplete({ solvedWords, jumbledWords })
 
-      // @ts-ignore
-      gtag('event', 'swap')
+      utils.track('event', 'swap')
 
       if (isComplete && !state.isEditMode) {
-        // @ts-ignore
-        gtag('event', 'level_end', { level_name: state.puzzleNumber })
+        utils.track('event', 'level_end', { level_name: state.puzzleNumber })
         stopwatch.pause()
         setStats((s: Stats) => ({
           ...s,
