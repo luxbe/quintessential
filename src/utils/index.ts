@@ -69,9 +69,9 @@ export const getTileStateByIndex = (
 
   // is this tile in the right word but wrong position?
   const belongsToWord = unsolvedLetters.includes(char)
-  // const dupeIndex = word.filter((l, li) => l === char && li < index % 5).length
-  // const solvedDupeCount = unsolvedLetters.filter((l) => l === char).length
-  const almost = !correct && belongsToWord // && dupeIndex < solvedDupeCount
+  const dupeCount = word.filter((l, li) => l === char && li < index % 5).length
+  const solvedDupeCount = solvedWord.filter((l) => l === char).length
+  const almost = !correct && belongsToWord && dupeCount < solvedDupeCount
   const state = correct ? 1 : almost ? 2 : 0
   const color = COLORS[state]
 
@@ -177,7 +177,8 @@ export const getParams = () => {
   const dateString = params.get('p') || todayDateString
   const solvedWords = params.get('s') || ''
   const jumbledWords = params.get('j') || ''
-  return { dateString, isEditMode, solvedWords, jumbledWords }
+  const fastMode = params.get('f') === ''
+  return { dateString, isEditMode, solvedWords, jumbledWords, fastMode }
 }
 
 export const saveGame = (state: GameState) => {
