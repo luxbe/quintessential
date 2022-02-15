@@ -22,17 +22,17 @@ describe('state', () => {
   it('when letter occurs once in word, only one occurance marked as almost correct 2', () => {
     cy.visit('http://localhost:3000/?p=2022-02-17&f')
     cy.get('.tile').eq(1).should('not.have.class', 'almost')
-    cy.get('.tile').eq(2).should('have.class', 'almost')
+    cy.get('.tile').eq(10).should('have.class', 'almost')
     cy.get('.tile').eq(3).should('not.have.class', 'almost')
     cy.get('.tile').eq(4).should('not.have.class', 'almost')
   })
 
   it('when 2 occurances in word and one is correct, other is still marked almost correct', () => {
-    cy.visit('http://localhost:3000/?p=2022-02-18&f')
-    cy.swapTiles(1, 6)
-    cy.swapTiles(7, 12)
-    cy.get('.tile').eq(6).should('have.class', 'correct')
-    cy.get('.tile').eq(7).should('have.class', 'almost')
+    cy.visit('http://localhost:3000/?p=2022-02-20&f')
+    cy.swapTiles(1, 11)
+    cy.swapTiles(15, 12)
+    cy.get('.tile').eq(11).should('have.class', 'correct')
+    cy.get('.tile').eq(12).should('have.class', 'almost')
   })
 
   it('should handle many occurrances in many words correctly', () => {
