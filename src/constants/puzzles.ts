@@ -31,7 +31,6 @@ export const PUZZLES = [
   ['drink,latte,break,beans,steam', 'kannb,lemse,traad,keais,tbert', 'coffee'],
   ['wires,chain,board,plane,knife', 'pfnec,shnda,noaii,wlare,kbrie', 'tools'],
   ['honda,tesla,chevy,buick,acura', 'henul,ucsaa,hcoay,bdicr,aetkv', 'cars'],
-
   ['sushi,knife,algae,trout,gills', 'gnsti,luioe,rlgat,eafsh,silku', 'food'],
   ['koala,steer,horse,lemur,tiger', 'eomrl,htkei,surse,agaol,treer', 'animals'],
   ['limes,berry,kiwis,pears,mango', 'kieei,amrsy,liwsr,pgbns,oarem', 'fruit'],
