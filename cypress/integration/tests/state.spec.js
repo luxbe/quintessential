@@ -21,10 +21,11 @@ describe('state', () => {
 
   it('when letter occurs once in word, only one occurance marked as almost correct 2', () => {
     cy.visit('http://localhost:3000/?p=2022-02-17&f')
-    cy.get('.tile').eq(1).should('not.have.class', 'almost')
-    cy.get('.tile').eq(10).should('have.class', 'almost')
-    cy.get('.tile').eq(3).should('not.have.class', 'almost')
-    cy.get('.tile').eq(4).should('not.have.class', 'almost')
+    cy.get('.tile').eq(6).should('not.have.class', 'almost')
+    cy.get('.tile').eq(0).should('have.class', 'almost')
+    cy.get('.tile').eq(1).should('have.class', 'almost')
+    cy.get('.tile').eq(7).should('not.have.class', 'almost')
+    cy.get('.tile').eq(8).should('not.have.class', 'almost')
   })
 
   it('when 2 occurances in word and one is correct, other is still marked almost correct', () => {

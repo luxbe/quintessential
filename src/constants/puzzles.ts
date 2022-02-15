@@ -10,7 +10,7 @@ export const PUZZLES = [
   ['heart,candy,flirt,cupid,adore', 'reird,cpnrd,feadt,auaiy,ctohl', 'valentine'],
   ['swine,rhino,tapir,fitch,zebra', 'pwhnr,riiaf,easre,otich,ztbin', 'animals'],
   ['melon,apple,grape,peach,lemon', 'laran,ophge,llnpe,peeep,mcmoa', 'fruit'],
-  ['blues,swing,metal,salsa,disco', 'buums,itiac,ehwnl,eolse,ossgd', 'music'],
+  ['blues,swing,metal,salsa,disco', 'lbgee,lwinu,ssais,stdma,lasco', 'music'],
   ['china,india,japan,napal,yemen', 'npnia,yejna,dahai,camal,inpen', 'countries'],
   ['mocha,irish,cream,sugar,brown', 'manis,hriar,rrwom,bugah,scoec', 'coffee'],
   ['whale,llama,skunk,hyena,mouse', 'wknly,elsms,ahmnh,keeaa,uoual', 'animals'],
