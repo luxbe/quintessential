@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, ReactNode, useEffect } from 'react'
 import { GameSettings, Stats } from '../types'
 import { getHumanizedTime, track } from '../utils'
 import { Modal } from './Modal'
@@ -65,35 +65,77 @@ export const StatsModal = ({
       title="Statistics"
       className="flex flex-col items-center text-center"
     >
-      <h2 className="mb-2">All Time</h2>
+      <StatsSection heading="Next Game">
+        <Countdown />
+      </StatsSection>
 
-      <div className="flex space-x-8 mb-6">
-        <Stat id="wins" num={stats.winCount} label="Wins" />
-        <Stat id="avg-moves" num={avgMoves} label="Avg. Moves" />
-        {settings.timer && (
-          <Stat id="avg-time" num={avgTime} label="Avg. Time" />
-        )}
-      </div>
+      <StatsSection heading="All Time">
+        <div className="flex justify-center space-x-8">
+          <Stat id="wins" num={stats.winCount} label="Wins" />
+          <Stat id="avg-moves" num={avgMoves} label="Avg. Moves" />
+          {settings.timer && (
+            <Stat id="avg-time" num={avgTime} label="Avg. Time" />
+          )}
+        </div>
+      </StatsSection>
 
       {isComplete ? (
-        <div id="last-game-stats">
-          <h2 className="mb-2">Last Game</h2>
+        <StatsSection heading="Last Game">
+          <>
+            <div id="last-game-stats" className="flex space-x-8 mb-4">
+              <Stat
+                id="puzzle-num"
+                num={puzzleName || 'random'}
+                label="Puzzle #"
+              />
+              <Stat id="moves" num={moveCount} label="Moves" />
+              {settings.timer && <Stat id="time" num={time} label="Time" />}
+            </div>
 
-          <div className="flex space-x-8 mb-6">
-            <Stat
-              id="puzzle-num"
-              num={puzzleName || 'random'}
-              label="Puzzle #"
-            />
-            <Stat id="moves" num={moveCount} label="Moves" />
-            {settings.timer && <Stat id="time" num={time} label="Time" />}
-          </div>
-
-          <button onClick={onShare}>{showMessage ? 'Copied!' : 'Share'}</button>
-        </div>
+            <button onClick={onShare}>
+              {showMessage ? 'Copied!' : 'Share'}
+            </button>
+          </>
+        </StatsSection>
       ) : (
         <></>
       )}
     </Modal>
+  )
+}
+
+const StatsSection = ({
+  heading,
+  children,
+}: {
+  heading: string
+  children: ReactNode
+}) => (
+  <div className="mb-6">
+    <h2>{heading}</h2>
+
+    {children}
+  </div>
+)
+
+const Countdown = () => {
+  const [, forceUpdate] = useState(0)
+  const endOfDay = new Date()
+  endOfDay.setHours(23, 59, 59)
+  const secondsToMidnight = (+endOfDay - Date.now()) / 1000
+  const hours = Math.floor(secondsToMidnight / 60 / 60)
+  const minutes = Math.floor(secondsToMidnight / 60 - hours * 60)
+  const seconds = Math.floor(secondsToMidnight - hours * 60 * 60 - minutes * 60)
+
+  useEffect(() => {
+    const interval = setInterval(() => forceUpdate(Date.now()), 1000)
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <span className="text-2xl font-semibold">
+      {`${hours}`.padStart(2, '0')}:{`${minutes}`.padStart(2, '0')}:
+      {`${seconds}`.padStart(2, '0')}
+    </span>
   )
 }
