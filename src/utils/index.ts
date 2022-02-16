@@ -1,9 +1,14 @@
+import splitbee from '@splitbee/web'
 import shuffle from 'lodash/shuffle'
 import chunk from 'lodash/chunk'
 import { GameState, TileElementData, TileState } from '../types'
 import { WORDS } from '../constants/puzzles'
 import { PUZZLES } from '../constants/puzzles'
 import { ONE_DAY, SAVE_KEY } from '../constants'
+
+if (process.env.NODE_ENV === 'production') {
+  splitbee.init()
+}
 
 const getBackgroundColor = (element: HTMLElement) =>
   element
@@ -205,11 +210,17 @@ export const getMessageFromMoveCount = (count: number) => {
   return 'Done!'
 }
 
-// @ts-ignore
-export const track = (...props) => {
+export const track = (type: string, name: string, options = {}) => {
   if (process.env.NODE_ENV === 'production') {
     // @ts-ignore
-    window.gtag(...props)
+    window.gtag(type, name, options)
+    splitbee.track(name, options)
+  }
+}
+
+export const setUser = (values = {}) => {
+  if (process.env.NODE_ENV === 'production') {
+    splitbee.user.set(values)
   }
 }
 

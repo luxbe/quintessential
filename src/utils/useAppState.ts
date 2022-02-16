@@ -69,7 +69,11 @@ export const useAppState = ({ onWin }: { onWin: () => void }): AppState => {
       utils.track('event', 'swap')
 
       if (isComplete && !state.isEditMode) {
-        utils.track('event', 'level_end', { level_name: state.puzzleNumber })
+        utils.track('event', 'level_end', {
+          level_name: state.puzzleNumber,
+          move_count: moveCount,
+          time: state.seconds,
+        })
         stopwatch.pause()
 
         setStats((s: Stats) => {
@@ -102,14 +106,19 @@ export const useAppState = ({ onWin }: { onWin: () => void }): AppState => {
             }, constants.MODAL_DURATION)
           }, constants.MODAL_DURATION / 4)
 
-          return {
+          const newStats = {
             ...s,
             winCount: s.winCount + 1,
             moveCount: s.moveCount + moveCount,
             secondCount: s.secondCount + state.seconds,
             streakCount: streakCount,
             lastWinStamp: Date.now(),
+            settings,
           }
+
+          utils.setUser(newStats)
+
+          return newStats
         })
       }
 
