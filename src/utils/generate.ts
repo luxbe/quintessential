@@ -1,8 +1,11 @@
-import { WORDS } from '../constants/puzzles'
+import { t } from 'i18next';
 import shuffle from 'lodash/shuffle'
 import { getJumbledWords } from '.'
 
 const puzzles = []
+const WORDS: string[] = t('game.words', {
+  returnObjects: true,
+});
 let words = shuffle([...WORDS])
 while (words.length >= 5) {
   const solvedWords = words.slice(0, 5)

@@ -2,9 +2,9 @@ import splitbee from '@splitbee/web'
 import shuffle from 'lodash/shuffle'
 import chunk from 'lodash/chunk'
 import { GameState, TileElementData, TileState } from '../types'
-import { WORDS } from '../constants/puzzles'
 import { PUZZLES } from '../constants/puzzles'
 import { ONE_DAY, SAVE_KEY } from '../constants'
+import { t } from 'i18next';
 
 if (process.env.NODE_ENV === 'production') {
   splitbee.init()
@@ -125,7 +125,13 @@ export const getHumanizedTime = (s: number) =>
 
 export const validatePuzzleString = (s: string) => /(([a-z]){5},?){5}/.test(s)
 
-export const getRandomWords = () => shuffle([...WORDS]).slice(0, 5)
+export const getRandomWords = () => {
+  const words = t('game.words', {
+      returnObjects: true,
+  });
+
+  return shuffle(words).slice(0, 5);
+}
 
 export const getBoardState = (state: GameState) =>
   wordsToEmoji(
