@@ -65,10 +65,6 @@ export const StatsModal = ({
       title="Statistics"
       className="flex flex-col items-center text-center"
     >
-      <StatsSection heading="Next Game">
-        <Countdown />
-      </StatsSection>
-
       <StatsSection heading="All Time">
         <div className="flex justify-center space-x-8">
           <Stat id="wins" num={stats.winCount} label="Wins" />
@@ -76,6 +72,13 @@ export const StatsModal = ({
           {settings.timer && (
             <Stat id="avg-time" num={avgTime} label="Avg. Time" />
           )}
+        </div>
+      </StatsSection>
+
+      <StatsSection heading="Next Game">
+        <div className="flex justify-center space-x-8">
+          <Stat id="streak" num={stats.streakCount} label="Streak" />
+          <Countdown />
         </div>
       </StatsSection>
 
@@ -125,17 +128,18 @@ const Countdown = () => {
   const secondsToMidnight = (+endOfDay - Date.now()) / 1000
   const hours = Math.floor(secondsToMidnight / 60 / 60)
   const minutes = Math.floor(secondsToMidnight / 60 - hours * 60)
-  const seconds = Math.floor(secondsToMidnight - hours * 60 * 60 - minutes * 60)
 
   useEffect(() => {
-    const interval = setInterval(() => forceUpdate(Date.now()), 1000)
+    const interval = setInterval(() => forceUpdate(Date.now()), 10000)
     return () => clearInterval(interval)
   }, [])
 
   return (
-    <span className="text-2xl font-semibold">
-      {`${hours}`.padStart(2, '0')}:{`${minutes}`.padStart(2, '0')}:
-      {`${seconds}`.padStart(2, '0')}
-    </span>
+    <div className="flex flex-col">
+      <span className="text-2xl font-semibold">
+        {`${hours}`}h {`${minutes}`}m
+      </span>
+      <span className="text-xs mt-1 text-light-gray">Countdown</span>
+    </div>
   )
 }

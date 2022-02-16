@@ -7,7 +7,6 @@ import getInitialState from './getInitialState'
 import useLocalStorage from './useLocalStorage'
 import useGestures from './useGestures'
 
-const initialStats: Stats = { winCount: 0, moveCount: 0, secondCount: 0 }
 const { dateString, isEditMode, jumbledWords, solvedWords } = utils.getParams()
 const initialState = getInitialState({
   dateString,
@@ -23,7 +22,10 @@ export const useAppState = ({ onWin }: { onWin: () => void }): AppState => {
   const autoStart = !state.isComplete && !state.isEditMode
   const stopwatch = useStopwatch({ autoStart, offsetTimestamp })
   const [settings, setSettings] = useLocalStorage(constants.SETTINGS_KEY, {})
-  const [stats, setStats] = useLocalStorage(constants.STATS_KEY, initialStats)
+  const [stats, setStats] = useLocalStorage(
+    constants.STATS_KEY,
+    constants.initialStats,
+  )
 
   useEffect(() => {
     utils.track('event', 'level_start', {
@@ -69,17 +71,41 @@ export const useAppState = ({ onWin }: { onWin: () => void }): AppState => {
       if (isComplete && !state.isEditMode) {
         utils.track('event', 'level_end', { level_name: state.puzzleNumber })
         stopwatch.pause()
-        setStats((s: Stats) => ({
-          ...s,
-          winCount: s.winCount + 1,
-          moveCount: s.moveCount + moveCount,
-          secondCount: s.secondCount + state.seconds,
-        }))
 
-        setTimeout(() => {
-          setMessage(utils.getMessageFromMoveCount(moveCount))
-          onWin()
-        }, 500)
+        setStats((s: Stats) => {
+          let streakCount = 0
+
+          if (s.lastWinStamp) {
+            const startOfDayYesterday = new Date(Date.now() - 24 * 3600 * 1000)
+            startOfDayYesterday.setHours(0, 0, 0, 0)
+            streakCount =
+              s.lastWinStamp < +startOfDayYesterday ? 0 : stats.streakCount
+          } else {
+            streakCount = utils.getStreakCountFromSaves(state)
+          }
+
+          if (typeof state.puzzleNumber === 'number') {
+            streakCount++
+          }
+
+          setTimeout(() => {
+            setMessage(utils.getMessageFromMoveCount(moveCount))
+
+            setTimeout(() => {
+              if (streakCount > 1) setMessage(`Streak x${streakCount}`)
+              onWin()
+            }, constants.MODAL_DURATION)
+          }, constants.MODAL_DURATION / 4)
+
+          return {
+            ...s,
+            winCount: s.winCount + 1,
+            moveCount: s.moveCount + moveCount,
+            secondCount: s.secondCount + state.seconds,
+            streakCount: streakCount,
+            lastWinStamp: Date.now(),
+          }
+        })
       }
 
       return { ...state, activeIndex, moveCount, jumbledWords, isComplete }

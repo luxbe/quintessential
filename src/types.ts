@@ -4,6 +4,8 @@ export interface Stats {
   winCount: number
   moveCount: number
   secondCount: number
+  streakCount: number
+  lastWinStamp: number | null
 }
 
 export interface GameState {

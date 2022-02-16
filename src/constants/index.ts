@@ -11,7 +11,13 @@ export const TIMER_MAX = 999
 export const MODAL_DURATION = fastMode ? 50 : 3000
 export const ONE_DAY = 1000 * 60 * 60 * 24
 export const zero = { x: 0, y: 0 }
-export const initialStats: Stats = { winCount: 0, moveCount: 0, secondCount: 0 }
+export const initialStats: Stats = {
+  winCount: 0,
+  moveCount: 0,
+  secondCount: 0,
+  streakCount: 0,
+  lastWinStamp: null,
+}
 export const springConfig = {
   x: 0,
   y: 0,

@@ -130,6 +130,13 @@ export const getBoardState = (state: GameState) =>
 
 export const getPuzzle = (date: Date | undefined) => {
   if (!date) {
+    if (getParams().fastMode) {
+      return {
+        puzzleNumber: 'random',
+        solvedWords: 'first,start,keeps,blast,shell'.split(','),
+        jumbledWords: 'first,start,keeps,blast,lhesl'.split(','),
+      }
+    }
     const solvedWords = getRandomWords()
     const jumbledWords = getJumbledWords(solvedWords)
     return { puzzleNumber: 'random', solvedWords, jumbledWords }
@@ -203,4 +210,18 @@ export const track = (...props) => {
     // @ts-ignore
     window.gtag(...props)
   }
+}
+
+export const getStreakCountFromSaves = (state: GameState) => {
+  let streak = true
+  return PUZZLES.filter((_, i) => i < (state.puzzleNumber || 0))
+    .reverse()
+    .map(
+      (p) =>
+        localStorage.getItem(`${SAVE_KEY}-${p[0]}`)?.split(':')[0] === p[0],
+    )
+    .reduce((sum, b) => {
+      if (!b) streak = false
+      return streak ? sum + 1 : sum
+    }, 0)
 }
