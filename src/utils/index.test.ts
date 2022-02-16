@@ -1,12 +1,30 @@
 import { getRandomWords } from '.'
 
-// jest.mock('./index', () => {
-//   const originalModule = jest.requireActual('./index')
-//   return {
-//     __esModule: true,
-//     ...originalModule,
-//   }
-// })
+jest.mock('i18next', () => {
+  const originalModule = jest.requireActual('i18next')
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    t: (key: string, ...args: string[]) => {
+      if (key === 'game.words') {
+        return [
+          'word1',
+          'word2',
+          'word3',
+          'word4',
+          'word5',
+          'word6',
+          'word7',
+          'word8',
+          'word9',
+          'word10',
+        ];
+      }
+      throw new Error('Unimplemented')
+    },
+  }
+})
 
 describe('getJumbledWords', () => {
   it.todo('returns 5 strings')
