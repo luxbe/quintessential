@@ -25,6 +25,7 @@ interface StatsModalProps {
   moveCount: number
   seconds: number
   puzzleNumber: number | string | undefined
+  puzzleTheme: string | undefined
   boardState: string
   stats: Stats
   settings: GameSettings
@@ -40,13 +41,14 @@ export const StatsModal = ({
   stats,
   boardState,
   settings,
+  puzzleTheme,
 }: StatsModalProps) => {
   const [showMessage, setShowMessage] = useState(false)
   const puzzleName = puzzleNumber
   const time = getHumanizedTime(seconds)
   const avgTime = getHumanizedTime(stats.secondCount / (stats.winCount || 1))
   const avgMoves = (stats.moveCount / (stats.winCount || 1)).toFixed(2)
-  let shareText = `quintessential.fun #${puzzleName}: ${moveCount} moves`
+  let shareText = `quintessential.fun #${puzzleName} (${puzzleTheme}): ${moveCount} moves`
 
   if (settings.timer) shareText += ` in ${time}`
   shareText += `\n\n${boardState}`

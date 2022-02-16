@@ -6,7 +6,7 @@ const puzzles = [
   'heart,candy,flirt,cupid,adore',
 ]
 
-describe('interface', () => {
+describe('stats', () => {
   beforeEach(() => {
     cy.restoreLocalStorage()
   })
@@ -16,9 +16,7 @@ describe('interface', () => {
   })
 
   it('should display streak correctly', () => {
-    localStorage.removeItem('quintessential-stats')
-    localStorage.removeItem('quint-help')
-    localStorage.removeItem('quintessential-save-swine,rhino,tapir,fitch,zebra')
+    localStorage.clear()
     cy.visit('http://localhost:3000/?f&p=2022-02-15')
     cy.get('.close-icon').click()
     puzzles.forEach((puzzle) => {

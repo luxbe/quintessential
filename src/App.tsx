@@ -83,6 +83,7 @@ const App = () => {
         open={modalState.stats}
         isComplete={state.isComplete}
         puzzleNumber={state.puzzleNumber}
+        puzzleTheme={state.theme}
         moveCount={state.moveCount}
         seconds={state.seconds}
         boardState={state.boardState}
