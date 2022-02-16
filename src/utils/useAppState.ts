@@ -91,7 +91,11 @@ export const useAppState = ({ onWin }: { onWin: () => void }): AppState => {
 
           setTimeout(() => {
             setMessage(utils.getMessageFromMoveCount(moveCount))
-
+            // TODO: sometimes the streak message is hidden early
+            if (streakCount < 2 || typeof state.puzzleNumber !== 'number') {
+              onWin()
+              return
+            }
             setTimeout(() => {
               if (streakCount > 1) setMessage(`Streak x${streakCount}`)
               onWin()

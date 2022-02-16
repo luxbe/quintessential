@@ -71,6 +71,7 @@ export const getTileStateByIndex = (
   const belongsToWord = unsolvedLetters.includes(char)
   const dupeCount = word.filter((l, li) => l === char && li < index % 5).length
   const solvedDupeCount = solvedWord.filter((l) => l === char).length
+  // TODO: this can still fail if the solved duplicates come _after_ the current position of the 2 letters
   const almost = !correct && belongsToWord && dupeCount < solvedDupeCount
   const state = correct ? 1 : almost ? 2 : 0
   const color = COLORS[state]
