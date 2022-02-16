@@ -73,18 +73,19 @@ export const useAppState = ({ onWin }: { onWin: () => void }): AppState => {
         stopwatch.pause()
 
         setStats((s: Stats) => {
-          let streakCount = 0
-
-          if (s.lastWinStamp) {
-            const startOfDayYesterday = new Date(Date.now() - 24 * 3600 * 1000)
-            startOfDayYesterday.setHours(0, 0, 0, 0)
-            streakCount =
-              s.lastWinStamp < +startOfDayYesterday ? 0 : stats.streakCount
-          } else {
-            streakCount = utils.getStreakCountFromSaves(state)
-          }
+          let streakCount = stats.streakCount || 0
 
           if (typeof state.puzzleNumber === 'number') {
+            if (s.lastWinStamp) {
+              const startOfDayYesterday = new Date(
+                Date.now() - 24 * 3600 * 1000,
+              )
+              startOfDayYesterday.setHours(0, 0, 0, 0)
+              streakCount =
+                s.lastWinStamp < +startOfDayYesterday ? 0 : stats.streakCount
+            } else {
+              streakCount = utils.getStreakCountFromSaves(state)
+            }
             streakCount++
           }
 

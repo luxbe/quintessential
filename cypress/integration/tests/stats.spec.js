@@ -16,11 +16,14 @@ describe('interface', () => {
   })
 
   it('should display streak correctly', () => {
+    localStorage.removeItem('quintessential-stats')
+    localStorage.removeItem('quint-help')
+    localStorage.removeItem('quintessential-save-swine,rhino,tapir,fitch,zebra')
+    cy.visit('http://localhost:3000/?f&p=2022-02-15')
+    cy.get('.close-icon').click()
     puzzles.forEach((puzzle) => {
       localStorage.setItem(`quintessential-save-${puzzle}`, puzzle + ':8-60')
     })
-    cy.visit('http://localhost:3000/?f&p=2022-02-15')
-    cy.get('.close-icon').click()
 
     cy.swapTiles(0, 12)
     cy.swapTiles(2, 6)
@@ -33,6 +36,13 @@ describe('interface', () => {
 
     cy.get('#stat-streak').contains('4')
 
+    cy.get('.close-icon').click()
+    cy.get('.settings-icon').click()
+    cy.get('#settings-modal').should('have.length', 1)
+    cy.get('#random-button').click()
+    cy.swapTiles(20, 23)
+    cy.get('#stat-streak').contains('4')
+
     cy.visit('http://localhost:3000/?f&p=2022-02-16')
     cy.swapTiles(10, 8)
     cy.swapTiles(11, 2)
@@ -43,13 +53,6 @@ describe('interface', () => {
     cy.swapTiles(5, 3)
     cy.swapTiles(24, 12)
 
-    cy.get('#stat-streak').contains('5')
-
-    cy.get('.close-icon').click()
-    cy.get('.settings-icon').click()
-    cy.get('#settings-modal').should('have.length', 1)
-    cy.get('#random-button').click()
-    cy.swapTiles(20, 23)
     cy.get('#stat-streak').contains('5')
 
     cy.visit('http://localhost:3000/?f&p=2022-02-18')

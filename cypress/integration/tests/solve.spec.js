@@ -62,7 +62,7 @@ describe('solve', () => {
     cy.get('.close-icon').click()
 
     cy.get('.stats-icon').click()
-    cy.get('#stat-time').contains(/0:0(1|2)/)
-    cy.get('#stat-avg-time').contains(/0:0(1|2)/)
+    cy.get('#stat-time').contains(/0:0(1|2|3|4|5|6)/)
+    cy.get('#stat-avg-time').contains(/0:0(1|2|3|4|5|6)/)
   })
 })
