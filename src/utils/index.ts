@@ -214,7 +214,7 @@ export const track = (type: string, name: string, options = {}) => {
   if (process.env.NODE_ENV === 'production') {
     // @ts-ignore
     window.gtag(type, name, options)
-    splitbee.track(name, options)
+    if (name !== 'swap') splitbee.track(name, options)
   }
 }
 
