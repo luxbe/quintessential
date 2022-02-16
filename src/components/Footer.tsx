@@ -1,3 +1,4 @@
+import { t } from 'i18next'
 import { getHumanizedTime } from '../utils'
 
 interface FooterProps {
@@ -15,7 +16,7 @@ export const Footer = ({ timer, seconds, moveCount }: FooterProps) => (
     {timer && <span id="timer">{getHumanizedTime(seconds)}</span>}
 
     <span id="move-count">
-      {moveCount} Move{moveCount === 1 ? '' : 's'}
+      {t("footer.moves", {count: moveCount})}
     </span>
   </div>
 )

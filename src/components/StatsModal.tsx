@@ -1,3 +1,4 @@
+import { t } from 'i18next'
 import { useState, ReactNode, useEffect } from 'react'
 import { GameSettings, Stats } from '../types'
 import { getHumanizedTime, track } from '../utils'
@@ -64,41 +65,41 @@ export const StatsModal = ({
       id="stats-modal"
       open={open}
       onClose={onClose}
-      title="Statistics"
+      title={t("stats.title")}
       className="flex flex-col items-center text-center"
     >
-      <StatsSection heading="All Time">
+      <StatsSection heading={t("stats.allTime.heading")}>
         <div className="flex justify-center space-x-8">
-          <Stat id="wins" num={stats.winCount} label="Wins" />
-          <Stat id="avg-moves" num={avgMoves} label="Avg. Moves" />
+          <Stat id="wins" num={stats.winCount} label={t("stats.allTime.wins")} />
+          <Stat id="avg-moves" num={avgMoves} label={t("stats.allTime.avgMoves")} />
           {settings.timer && (
-            <Stat id="avg-time" num={avgTime} label="Avg. Time" />
+            <Stat id="avg-time" num={avgTime} label={t("stats.allTime.avgTime")} />
           )}
         </div>
       </StatsSection>
 
-      <StatsSection heading="Next Game">
+      <StatsSection heading={t("stats.nextGame.heading")}>
         <div className="flex justify-center space-x-8">
-          <Stat id="streak" num={stats.streakCount} label="Streak" />
+          <Stat id="streak" num={stats.streakCount} label={t("stats.nextGame.streak")} />
           <Countdown />
         </div>
       </StatsSection>
 
       {isComplete ? (
-        <StatsSection heading="Last Game">
+        <StatsSection heading={t("stats.lastGame.heading")}>
           <>
             <div id="last-game-stats" className="flex space-x-8 mb-4">
               <Stat
                 id="puzzle-num"
                 num={puzzleName || 'random'}
-                label="Puzzle #"
+                label={t("stats.lastGame.puzzleNr")}
               />
-              <Stat id="moves" num={moveCount} label="Moves" />
-              {settings.timer && <Stat id="time" num={time} label="Time" />}
+              <Stat id="moves" num={moveCount} label={t("stats.lastGame.moves")} />
+              {settings.timer && <Stat id="time" num={time} label={t("stats.lastGame.time")} />}
             </div>
 
             <button onClick={onShare}>
-              {showMessage ? 'Copied!' : 'Share'}
+              {showMessage ? t('stats.copied'):t('stats.share')}
             </button>
           </>
         </StatsSection>
@@ -141,7 +142,7 @@ const Countdown = () => {
       <span className="text-2xl font-semibold">
         {`${hours}`}h {`${minutes}`}m
       </span>
-      <span className="text-xs mt-1 text-light-gray">Countdown</span>
+      <span className="text-xs mt-1 text-light-gray">{t('stats.countdown')}</span>
     </div>
   )
 }

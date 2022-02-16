@@ -1,3 +1,4 @@
+import { t } from 'i18next'
 import { Modal } from './Modal'
 
 interface HelpModalProps {
@@ -10,25 +11,23 @@ export const HelpModal = ({ open, onClose }: HelpModalProps) => (
     id="help-modal"
     open={open}
     onClose={onClose}
-    title="How to play"
+    title={t("help.title")}
     className="text-left"
   >
-    <p>Try to get each of the 5 horizontal words correct.</p>
-    <p>Click/tap/drag two letters to swap them.</p>
+    <p>{t("help.message1")}</p>
+    <p>{t("help.message2")}</p>
 
     <video className="mx-auto max-h-[8rem]" autoPlay loop muted playsInline>
       <source src="/help.mp4" type="video/mp4" />
     </video>
     <p>
-      <span className="font-bold text-green">Green</span> is correct.
+      <span className="font-bold text-green">{t("help.correct.name")}</span> {t("help.correct.message")}
     </p>
     <p>
-      <span className="font-bold text-yellow">Yellow</span> is in correct word,
-      but wrong position.
+      <span className="font-bold text-yellow">{t("help.almost.name")}</span> {t("help.almost.message")}
     </p>
     <p>
-      <span className="font-bold text-light-gray">Gray</span> belongs in another
-      word.
+      <span className="font-bold text-light-gray">{t("help.wrong.name")}</span> {t("help.wrong.message")}
     </p>
   </Modal>
 )

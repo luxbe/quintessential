@@ -1,3 +1,4 @@
+import { t } from 'i18next'
 import { HelpIcon, SettingsIcon, StatsIcon } from './Icons'
 
 interface HeaderProps {
@@ -43,7 +44,7 @@ export const Header = ({
 
         {theme && (
           <span>
-            <span className="font-bold mr-2">THEME</span>
+            <span className="font-bold mr-2">{t('header.theme').toUpperCase()}</span>
             <span className="font-light">{theme?.toUpperCase()}</span>
           </span>
         )}

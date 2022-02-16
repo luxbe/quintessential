@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { Word } from './components/Word'
 import { StatsModal } from './components/StatsModal'
 import { SettingsModal } from './components/SettingsModal'
@@ -10,6 +10,7 @@ import { Footer } from './components/Footer'
 import * as utils from './utils'
 import { useAppState } from './utils/useAppState'
 import { HELP_KEY, MODAL_DURATION } from './constants'
+import { useTranslation } from 'react-i18next'
 
 const modalInitialState = {
   help: localStorage.getItem(HELP_KEY) !== '1',
@@ -26,6 +27,8 @@ const App = () => {
   const onWin = () =>
     setTimeout(() => setModalState({ stats: true }), MODAL_DURATION)
   const { state, ...helpers } = useAppState({ onWin })
+
+  useTranslation()
 
   return (
     <>
@@ -95,4 +98,10 @@ const App = () => {
   )
 }
 
-export default App
+const WrappedApp = () => (
+  <Suspense fallback="...loading">
+    <App />
+  </Suspense>
+)
+
+export default WrappedApp

@@ -29,3 +29,8 @@ export const springConfig = {
     clamp: true,
   },
 }
+
+export const LANGUAGES = {
+  en: { nativeName: 'English' },
+  de: { nativeName: 'Deutsch' },
+} as const;

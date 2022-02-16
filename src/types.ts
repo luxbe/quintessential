@@ -24,6 +24,7 @@ export interface GameState {
 
 export interface GameSettings {
   timer: boolean
+  language: 'en' | 'de'
 }
 
 export interface TileState {
