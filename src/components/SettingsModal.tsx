@@ -1,11 +1,10 @@
-import { GameSettings } from '../types'
+import { DropdownOptions, GameSettings } from '../types'
 import { track } from '../utils'
 import { Modal } from './Modal'
 import { Switch } from './Switch'
 import { Dropdown } from './Dropdown'
-import { LANGUAGES } from '../constants'
-import { t } from 'i18next'
-import i18n from '../i18n'
+import { t, changeLanguage } from 'i18next'
+import { getLanguageOptions } from '../utils/i18n'
 
 interface SettingsModalProps {
   settings: GameSettings
@@ -40,11 +39,11 @@ export const SettingsModal = ({
     id="language-switch"
     label={t("settings.language")}
     value={settings?.language}
-    options={Object.keys(LANGUAGES).map(key => [LANGUAGES[key as keyof typeof LANGUAGES].nativeName, key])}
+    options={getLanguageOptions()}
     setValue={(v: string) => {
-      track('event', 'change_setting', { name: 'timer', value: !!v })
+      track('event', 'change_setting', { name: 'language', value: v })
       setSettings((s: GameSettings) => ({ ...s, language: v }))
-      i18n.changeLanguage(v)
+      changeLanguage(v)
     }}
   />
   <button

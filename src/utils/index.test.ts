@@ -8,18 +8,7 @@ jest.mock('i18next', () => {
     ...originalModule,
     t: (key: string, ...args: string[]) => {
       if (key === 'game.words') {
-        return [
-          'word1',
-          'word2',
-          'word3',
-          'word4',
-          'word5',
-          'word6',
-          'word7',
-          'word8',
-          'word9',
-          'word10',
-        ];
+        return Array.from({ length: 10 }, (_, i) => `word${i + 1}`)
       }
       throw new Error('Unimplemented')
     },
