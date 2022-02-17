@@ -61,3 +61,5 @@ export interface AppState {
   bindGestures: (i: number) => {}
   springs: SpringState[]
 }
+
+export type DropdownOptions = [label: string, value?: string][]

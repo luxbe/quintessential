@@ -1,8 +1,10 @@
+import { DropdownOptions } from "../types";
+
 interface DropdownProps {
     id: string
     label: string
     value: string
-    options: [label: string, value?: string][]
+    options: DropdownOptions
     setValue: (v: string) => void
   }
   export const Dropdown = ({ id, label, value, setValue, options }: DropdownProps) => (
