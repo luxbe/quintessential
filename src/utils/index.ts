@@ -4,7 +4,7 @@ import chunk from 'lodash/chunk'
 import { GameState, TileElementData, TileState } from '../types'
 import { PUZZLES } from '../constants/puzzles'
 import { ONE_DAY, SAVE_KEY } from '../constants'
-import { t } from 'i18next';
+import { t } from 'i18next'
 
 if (process.env.NODE_ENV === 'production') {
   splitbee.init()
@@ -57,7 +57,7 @@ export const getTileStateByIndex = (
     solvedWords: string[]
     activeIndex: number | null
   },
-  index: number,
+  index: number
 ): TileState => {
   const wordIndex = Math.floor(index / 5)
   const word = jumbledWords[wordIndex].split('')
@@ -103,7 +103,7 @@ export const getTranslateXY = (element: HTMLElement) => {
 }
 
 export const getTileElementData = (
-  el: HTMLElement | null,
+  el: HTMLElement | null
 ): TileElementData => ({
   x: el ? el.offsetLeft : -1,
   y: el ? el.offsetTop : -1,
@@ -114,7 +114,7 @@ export const getTileElementData = (
 export const getTileElementAtXY = (
   x: number,
   y: number,
-  _el: HTMLElement,
+  _el: HTMLElement
 ): HTMLElement =>
   document
     .elementsFromPoint(x, y)
@@ -127,17 +127,17 @@ export const validatePuzzleString = (s: string) => /(([a-z]){5},?){5}/.test(s)
 
 export const getRandomWords = () => {
   const words = t('game.words', {
-      returnObjects: true,
-  });
+    returnObjects: true,
+  })
 
-  return shuffle(words).slice(0, 5);
+  return shuffle(words).slice(0, 5)
 }
 
 export const getBoardState = (state: GameState) =>
   wordsToEmoji(
     state.jumbledWords.map((w, wi) =>
-      w.split('').map((l, li) => getTileStateByIndex(state, wi * 5 + li)),
-    ),
+      w.split('').map((l, li) => getTileStateByIndex(state, wi * 5 + li))
+    )
   )
 
 export const getPuzzle = (date: Date | undefined) => {
@@ -166,7 +166,7 @@ export const getPuzzle = (date: Date | undefined) => {
 
 export const applySave = (state: GameState) => {
   const save = localStorage.getItem(
-    `${SAVE_KEY}-${state.solvedWords.join(',')}`,
+    `${SAVE_KEY}-${state.solvedWords.join(',')}`
   )
   if (save) {
     const [words, other] = save.split(':')
@@ -186,7 +186,7 @@ export const getIsComplete = ({
   jumbledWords: string[]
 }) =>
   jumbledWords.every((w, wi) =>
-    w.split('').every((c, ci) => c === solvedWords[wi][ci]),
+    w.split('').every((c, ci) => c === solvedWords[wi][ci])
   )
 
 export const getParams = () => {
@@ -203,17 +203,30 @@ export const getParams = () => {
 export const saveGame = (state: GameState) => {
   localStorage.setItem(
     `${SAVE_KEY}-${state.solvedWords.join(',')}`,
-    `${state.jumbledWords.join(',')}:${state.moveCount}-${state.seconds}`,
+    `${state.jumbledWords.join(',')}:${state.moveCount}-${state.seconds}`
   )
 }
 
 export const getMessageFromMoveCount = (count: number) => {
-  if (count === 8) return 'Perfect!'
-  if (count === 9) return 'Amazing!'
-  if (count === 10) return 'Great!'
-  if (count === 11) return 'Good!'
-  if (count === 12) return 'Not Bad!'
-  return 'Done!'
+  let key = 'done'
+  switch (count) {
+    case 8:
+      key = 'perfect'
+      break
+    case 9:
+      key = 'amazing'
+      break
+    case 10:
+      key = 'great'
+      break
+    case 11:
+      key = 'good'
+      break
+    case 12:
+      key = 'notBad'
+      break
+  }
+  return t(`game.message.${key}`)
 }
 
 export const track = (type: string, name: string, options = {}) => {
@@ -235,8 +248,7 @@ export const getStreakCountFromSaves = (state: GameState) => {
   return PUZZLES.filter((_, i) => i < (state.puzzleNumber || 0))
     .reverse()
     .map(
-      (p) =>
-        localStorage.getItem(`${SAVE_KEY}-${p[0]}`)?.split(':')[0] === p[0],
+      (p) => localStorage.getItem(`${SAVE_KEY}-${p[0]}`)?.split(':')[0] === p[0]
     )
     .reduce((sum, b) => {
       if (!b) streak = false
